@@ -10,4 +10,17 @@ public class BadiusOsicGreenTribesApplication {
         SpringApplication.run(BadiusOsicGreenTribesApplication.class, args);
     }
 
+/*
+    @Bean
+    public TransactionHandlerRegistry handlerRegistry(){
+        TransactionHandlerRegistry registry = new TransactionHandlerRegistry();
+
+        registry.add(TransactionType.PRODUCTION, ProductionHandler.class);
+
+
+        return registry;
+    }
+
+ */
+
 }
