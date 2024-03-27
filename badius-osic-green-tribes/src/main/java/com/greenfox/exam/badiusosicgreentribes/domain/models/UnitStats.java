@@ -55,4 +55,56 @@ public class UnitStats {
     public void setSpeed(Integer speed) {
         this.speed = speed;
     }
+
+    public static class Builder {
+        private Integer attack;
+        private Integer defense;
+        private Integer health;
+        private Float aggressivity;
+        private Integer charisma;
+        private Integer speed;
+
+        public Builder attack(Integer attack) {
+            this.attack = attack;
+            return this;
+        }
+
+        public Builder defense(Integer defense) {
+            this.defense = defense;
+            return this;
+        }
+
+        public Builder health(Integer health) {
+            this.health = health;
+            return this;
+        }
+
+        public Builder aggressivity(Float aggressivity) {
+            this.aggressivity = aggressivity;
+            return this;
+        }
+
+        public Builder charisma(Integer charisma) {
+            this.charisma = charisma;
+            return this;
+        }
+
+        public Builder speed(Integer speed) {
+            this.speed = speed;
+            return this;
+        }
+
+        public UnitStats build(){
+            return new UnitStats(this);
+        }
+    }
+
+    private UnitStats (Builder builder){
+        this.attack = builder.attack;
+        this.defense = builder.defense;
+        this. health = builder.health;
+        this.aggressivity = builder.aggressivity;
+        this.charisma = builder.charisma;
+        this.speed = builder.speed;
+    }
 }

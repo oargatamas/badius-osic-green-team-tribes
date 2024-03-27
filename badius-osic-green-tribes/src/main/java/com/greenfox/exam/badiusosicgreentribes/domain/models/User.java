@@ -103,4 +103,91 @@ public class User {
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
+
+    public static class Builder{
+        private Long id;
+        private String userName;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private Boolean isVerified;
+        private String passwordHash;
+        private Timestamp createdAt;
+        private Timestamp lastLogin;
+        private List<Kingdom> kingdoms;
+        private UserRole userRole;
+
+        public Builder dd(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder verified(Boolean verified) {
+            isVerified = verified;
+            return this;
+        }
+
+        public Builder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+            return this;
+        }
+
+        public Builder createdAt(Timestamp createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder lastLogin(Timestamp lastLogin) {
+            this.lastLogin = lastLogin;
+            return this;
+        }
+
+        public Builder kingdoms(List<Kingdom> kingdoms) {
+            this.kingdoms = kingdoms;
+            return this;
+        }
+
+        public Builder userRole(UserRole userRole) {
+            this.userRole = userRole;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+
+    private User (Builder builder){
+        this.id = builder.id;
+        this.userName = builder.userName;
+        this.email = builder.email;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.isVerified = builder.isVerified;
+        this.passwordHash = builder.passwordHash;
+        this.createdAt = builder.createdAt;
+        this.lastLogin = builder.lastLogin;
+        this.kingdoms = builder.kingdoms;
+        this.userRole = builder.userRole;
+    }
 }
