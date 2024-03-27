@@ -35,6 +35,31 @@ public class Army {
     public Kingdom getKingdom() {
         return kingdom;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setState(ArmyState state) {
+        this.state = state;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public void setStats(UnitStats stats) {
+        this.stats = stats;
+    }
+
+    public void setTroops(List<Troop> troops) {
+        this.troops = troops;
+    }
+
+    public void setKingdom(Kingdom kingdom) {
+        this.kingdom = kingdom;
+    }
+
     private Army(Builder builder){
         this.name = builder.name;
         this.state = builder.state;

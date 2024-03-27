@@ -17,7 +17,6 @@ public class User {
     private Timestamp lastLogin;
     private List<Kingdom> kingdoms;
     private UserRole userRole;
-
     public Long getId() {
         return id;
     }
@@ -119,7 +118,7 @@ public class User {
         private List<Kingdom> kingdoms;
         private UserRole userRole;
 
-        public Builder dd(Long id) {
+        public Builder id(Long id) {
             this.id = id;
             return this;
         }

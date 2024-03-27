@@ -6,6 +6,7 @@ public class Turn {
     private Troop attacker;
     private Troop defender;
 
+
     public TurnState getState() {
         return state;
     }
@@ -38,6 +39,7 @@ public class Turn {
         this.defender = defender;
     }
     public static class Builder{
+
         private TurnState state;
         private String result;
         private Troop attacker;

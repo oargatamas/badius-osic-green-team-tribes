@@ -46,15 +46,6 @@ public class Building {
     public Cost getCost() {
         return cost;
     }
-    private Building(Builder builder){
-        this.name = builder.name;
-        this.level = builder.level;
-        this.hp = builder.hp;
-        this.type = builder.type;
-        this.storage = builder.storage;
-        this.transactions = builder.transactions;
-        this.cost = builder.cost;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -127,5 +118,14 @@ public class Building {
         public Building build(){
             return new Building(this);
         }
+    }
+    private Building(Builder builder){
+        this.name = builder.name;
+        this.level = builder.level;
+        this.hp = builder.hp;
+        this.type = builder.type;
+        this.storage = builder.storage;
+        this.transactions = builder.transactions;
+        this.cost = builder.cost;
     }
 }

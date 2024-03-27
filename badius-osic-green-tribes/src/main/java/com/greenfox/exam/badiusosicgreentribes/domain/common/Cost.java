@@ -16,11 +16,6 @@ public class Cost {
     public Integer getGold() {
         return gold;
     }
-    private Cost(Builder builder){
-        this.duration = builder.duration;
-        this.food = builder.food;
-        this.gold = builder.gold;
-    }
 
     public void setDuration(Integer duration) {
         this.duration = duration;
@@ -54,5 +49,10 @@ public class Cost {
         public Cost build(){
             return new Cost(this);
         }
+    }
+    private Cost(Builder builder){
+        this.duration = builder.duration;
+        this.food = builder.food;
+        this.gold = builder.gold;
     }
 }

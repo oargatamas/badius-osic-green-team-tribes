@@ -7,6 +7,7 @@ public class Troop {
     private UnitStats stats;
     private Unit unit;
 
+
     public Integer getPosition() {
         return position;
     }
