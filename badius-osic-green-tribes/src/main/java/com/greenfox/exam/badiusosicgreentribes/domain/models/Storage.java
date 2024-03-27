@@ -48,4 +48,48 @@ public class Storage {
     public void setBuildings(List<Building> buildings) {
         this.buildings = buildings;
     }
+
+    public static class Builder {
+        private Integer food;
+        private Integer gold;
+        private Army defenderArmy;
+        private Army army;
+        private List<Building> buildings;
+
+        public Builder food(Integer food) {
+            this.food = food;
+            return this;
+        }
+
+        public Builder gold(Integer gold) {
+            this.gold = gold;
+            return this;
+        }
+
+        public Builder defenderArmy(Army defenderArmy) {
+            this.defenderArmy = defenderArmy;
+            return this;
+        }
+
+        public Builder army(Army army) {
+            this.army = army;
+            return this;
+        }
+
+        public Builder buildings(List<Building> buildings) {
+            this.buildings = buildings;
+            return this;
+        }
+
+        public Storage build(){
+            return new Storage(this);
+        }
+    }
+    private Storage (Builder builder){
+        this.food = builder.food;
+        this.gold = builder.gold;
+        this.defenderArmy = builder.defenderArmy;
+        this.army = builder.army;
+        this.buildings = builder.buildings;
+    }
 }

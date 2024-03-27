@@ -46,4 +46,50 @@ public class Troop {
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
+
+    public static class Builder {
+        private Integer position;
+        private Integer quantity;
+        private Integer level;
+        private UnitStats stats;
+        private Unit unit;
+
+        public Builder position(Integer position) {
+            this.position = position;
+            return this;
+        }
+
+        public Builder quantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder level(Integer level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder stats(UnitStats stats) {
+            this.stats = stats;
+            return this;
+        }
+
+        public Builder unit(Unit unit) {
+            this.unit = unit;
+            return this;
+        }
+
+        public Troop build() {
+            return new Troop(this);
+        }
+    }
+
+    private Troop (Builder builder){
+        this.position = builder.position;
+        this.quantity = builder.quantity;
+        this.level = builder.level;
+        this.stats = builder.stats;
+        this.unit = builder.unit;
+    }
+
 }

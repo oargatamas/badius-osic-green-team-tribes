@@ -9,6 +9,68 @@ public class Kingdom{
     private GameMap map;
     private Storage storage;
 
+    public static class Builder{
+        private String name;
+        private String ownerName;
+        private Integer coordinateX;
+        private Integer coordinateY;
+        private User owner;
+        private GameMap map;
+        private Storage storage;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder ownerName(String ownerName) {
+            this.ownerName = ownerName;
+            return this;
+        }
+
+        public Builder coordinateX(Integer coordinateX) {
+            this.coordinateX = coordinateX;
+            return this;
+        }
+
+        public Builder coordinateY(Integer coordinateY) {
+            this.coordinateY = coordinateY;
+            return this;
+        }
+
+        public Builder owner(User owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public Builder map(GameMap map) {
+            this.map = map;
+            return this;
+        }
+
+        public Builder storage(Storage storage) {
+            this.storage = storage;
+            return this;
+        }
+
+        public Kingdom build() {
+            return new Kingdom(this);
+        }
+    }
+
+    private Kingdom (Builder builder){
+        this.name = builder.name;
+        this.ownerName = builder.ownerName;
+        this.coordinateX = builder.coordinateX;
+        this.coordinateY = builder.coordinateY;
+        this.owner = builder.owner;
+        this.map = builder.map;
+        this.storage = builder.storage;
+    }
+
+
+
+
     public String getName() {
         return name;
     }
