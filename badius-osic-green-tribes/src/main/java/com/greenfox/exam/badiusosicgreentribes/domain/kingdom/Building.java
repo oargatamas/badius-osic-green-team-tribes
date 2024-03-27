@@ -1,5 +1,6 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
+import com.greenfox.exam.badiusosicgreentribes.domain.common.Cost;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 
 import java.util.List;

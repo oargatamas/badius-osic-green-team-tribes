@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.common;
 
 public class Cost {
     private Integer duration;

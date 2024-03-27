@@ -1,6 +1,6 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.models.Kingdom;
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 
 public class Movement extends Transaction{
     private Kingdom origin;

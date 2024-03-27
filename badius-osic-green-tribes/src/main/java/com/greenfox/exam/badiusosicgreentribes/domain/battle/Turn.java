@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
 public class Turn {
     private TurnState state;

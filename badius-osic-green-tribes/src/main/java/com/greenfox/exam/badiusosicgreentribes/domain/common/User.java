@@ -1,4 +1,6 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.common;
+
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 
 import java.sql.Timestamp;
 import java.util.List;

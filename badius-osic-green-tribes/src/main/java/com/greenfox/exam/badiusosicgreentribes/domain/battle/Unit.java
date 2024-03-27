@@ -1,4 +1,6 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.battle;
+
+import com.greenfox.exam.badiusosicgreentribes.domain.common.Cost;
 
 public class Unit {
     private String name;

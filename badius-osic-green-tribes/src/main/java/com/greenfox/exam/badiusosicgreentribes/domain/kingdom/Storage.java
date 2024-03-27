@@ -1,4 +1,6 @@
-package com.greenfox.exam.badiusosicgreentribes.domain.models;
+package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
+
+import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 
 import java.util.List;
 
