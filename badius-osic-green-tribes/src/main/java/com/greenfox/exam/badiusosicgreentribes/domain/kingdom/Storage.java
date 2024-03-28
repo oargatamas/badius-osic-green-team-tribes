@@ -1,15 +1,23 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 
 import java.util.List;
 
+@Embeddable
 public class Storage {
     private Integer food;
     private Integer gold;
     private Army defenderArmy;
+    @Transient
     private Army army;
+    @Transient
     private List<Building> buildings;
+
+    public Storage() {
+    }
 
     public Integer getFood() {
         return food;

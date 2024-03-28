@@ -1,14 +1,32 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.Cost;
+import jakarta.persistence.*;
 
+@Entity
+@Table (name = "Units")
 public class Unit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String iconUrl;
+    @Embedded
     private UnitStats stats;
+    @Column (name = "unit_type")
     private UnitType type;
+    @Embedded
     private Cost creationCost;
+    @Embedded
     private Cost upgradeCost;
+
+    public Unit() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

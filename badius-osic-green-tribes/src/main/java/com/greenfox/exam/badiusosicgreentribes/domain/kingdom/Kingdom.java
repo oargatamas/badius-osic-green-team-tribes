@@ -1,15 +1,32 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
+import jakarta.persistence.*;
 
-public class Kingdom{
+@Entity
+@Table (name = "Kingdoms")
+public class Kingdom {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String ownerName;
     private Integer coordinateX;
     private Integer coordinateY;
+    @ManyToOne
     private User owner;
+    @ManyToOne
     private GameMap map;
+    @Embedded
     private Storage storage;
+
+    public Kingdom() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public static class Builder{
         private String name;

@@ -1,12 +1,19 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.common;
 
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.GameMap;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Entity
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userId;
     private String userName;
     private String email;
     private String firstName;
@@ -15,14 +22,29 @@ public class User {
     private String passwordHash;
     private Timestamp createdAt;
     private Timestamp lastLogin;
+    @Transient
     private List<Kingdom> kingdoms;
     private UserRole userRole;
-    public Long getId() {
-        return id;
+    @ManyToMany
+    @JoinTable(
+            name = "Maps_Users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "map_id"))
+    private List<GameMap> maps;
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public User() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUserName() {
@@ -105,6 +127,14 @@ public class User {
         this.userRole = userRole;
     }
 
+    public List<GameMap> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(List<GameMap> maps) {
+        this.maps = maps;
+    }
+
     public static class Builder{
         private Long id;
         private String userName;
@@ -117,6 +147,12 @@ public class User {
         private Timestamp lastLogin;
         private List<Kingdom> kingdoms;
         private UserRole userRole;
+        private List<GameMap> maps;
+
+        public Builder maps(List<GameMap> maps) {
+            this.maps = maps;
+            return this;
+        }
 
         public Builder id(Long id) {
             this.id = id;
@@ -190,5 +226,6 @@ public class User {
         this.lastLogin = builder.lastLogin;
         this.kingdoms = builder.kingdoms;
         this.userRole = builder.userRole;
+        this.maps = builder.maps;
     }
 }

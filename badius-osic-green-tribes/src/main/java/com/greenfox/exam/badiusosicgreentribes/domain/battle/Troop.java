@@ -1,12 +1,38 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table (name = "Troops")
 public class Troop {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Integer position;
     private Integer quantity;
     private Integer level;
+    @Embedded
     private UnitStats stats;
+    @OneToOne
     private Unit unit;
+    @ManyToOne
+    private Army army;
 
+    public Troop() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Army getArmy() {
+        return army;
+    }
+
+    public void setArmy(Army army) {
+        this.army = army;
+    }
 
     public Integer getPosition() {
         return position;
@@ -54,6 +80,12 @@ public class Troop {
         private Integer level;
         private UnitStats stats;
         private Unit unit;
+        private Army army;
+
+        public Builder army(Army army) {
+            this.army = army;
+            return this;
+        }
 
         public Builder position(Integer position) {
             this.position = position;
@@ -91,6 +123,7 @@ public class Troop {
         this.level = builder.level;
         this.stats = builder.stats;
         this.unit = builder.unit;
+        this.army = builder.army;
     }
 
 }
