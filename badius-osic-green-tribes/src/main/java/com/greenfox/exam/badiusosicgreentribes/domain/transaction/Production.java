@@ -12,9 +12,11 @@ public class Production extends Transaction{
     @Enumerated(value = EnumType.STRING)
     private ProductionUnitType type;
 
+
     @JoinColumn(name = "target_kingdom")
     @ManyToOne
     private Kingdom targetKingdom;
+
 
     public Production() {
     }
@@ -34,6 +36,15 @@ public class Production extends Transaction{
     public void setType(ProductionUnitType type) {
         this.type = type;
     }
+
+    public Kingdom getTargetKingdom() {
+        return targetKingdom;
+    }
+
+    public void setTargetKingdom(Kingdom targetKingdom) {
+        this.targetKingdom = targetKingdom;
+    }
+
     private Production(Builder builder){
         this.quantity = builder.quantity;
         this.type = builder.type;
