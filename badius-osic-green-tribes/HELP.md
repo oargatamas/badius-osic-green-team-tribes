@@ -1,5 +1,12 @@
 # Getting Started
 
+# Install 
+
+## Database using docker
+
+```docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:8```
+
+
 ### Reference Documentation
 
 For further reference, please consider the following sections:
