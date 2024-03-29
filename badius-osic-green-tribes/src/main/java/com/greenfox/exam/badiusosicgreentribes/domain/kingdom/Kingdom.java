@@ -14,9 +14,6 @@ public class Kingdom {
 
     private String name;
 
-    @Column(name = "owner_name")
-    private String ownerName;
-
     @Column(name = "coordinate_x")
     private Integer coordinateX;
 
@@ -90,7 +87,6 @@ public class Kingdom {
 
     private Kingdom (Builder builder){
         this.name = builder.name;
-        this.ownerName = builder.ownerName;
         this.coordinateX = builder.coordinateX;
         this.coordinateY = builder.coordinateY;
         this.owner = builder.owner;
@@ -107,14 +103,6 @@ public class Kingdom {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
     }
 
     public Integer getCoordinateX() {
