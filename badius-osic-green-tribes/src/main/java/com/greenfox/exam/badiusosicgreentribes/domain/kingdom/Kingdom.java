@@ -2,6 +2,7 @@ package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
 import jakarta.persistence.*;
+import jakarta.websocket.ClientEndpoint;
 
 @Entity
 @Table (name = "Kingdoms")
@@ -13,10 +14,13 @@ public class Kingdom {
 
     private String name;
 
+    @Column(name = "owner_name")
     private String ownerName;
 
+    @Column(name = "coordinate_x")
     private Integer coordinateX;
 
+    @Column(name = "coordinate_y")
     private Integer coordinateY;
 
     @ManyToOne
