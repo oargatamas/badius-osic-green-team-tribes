@@ -1,8 +1,23 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Productions")
 public class Production extends Transaction{
+
     private Integer quantity;
+
+    @Enumerated(value = EnumType.STRING)
     private ProductionUnitType type;
+
+    @JoinColumn(name = "target_kingdom")
+    @ManyToOne
+    private Kingdom targetKingdom;
+
+    public Production() {
+    }
 
     public Integer getQuantity() {
         return quantity;

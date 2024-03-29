@@ -3,37 +3,32 @@ package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table (name = "Transactions")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String name;
+    
     private Integer duration;
-    private Timestamp startAt;
+
+    @Column(name = "start_at")
+    private LocalDateTime startAt;
+    
     private boolean recurring;
+    
+    @Enumerated(value = EnumType.STRING)
     private TransactionState state;
-    @ManyToMany
-    @JoinTable(
-            name = "Buildings_Transactions",
-            joinColumns = @JoinColumn(name = "transaction_id"),
-            inverseJoinColumns = @JoinColumn(name = "building_id"))
-    private List<Building> buildings;
+
 
     protected Transaction(){}
-
-    public List<Building> getBuildings() {
-        return buildings;
-    }
-
-    public void setBuildings(List<Building> buildings) {
-        this.buildings = buildings;
-    }
 
     public String getName() {
         return name;
@@ -51,11 +46,11 @@ public class Transaction {
         this.duration = duration;
     }
 
-    public Timestamp getStartAt() {
+    public LocalDateTime getStartAt() {
         return startAt;
     }
 
-    public void setStartAt(Timestamp startAt) {
+    public void setStartAt(LocalDateTime startAt) {
         this.startAt = startAt;
     }
 
@@ -85,21 +80,14 @@ public class Transaction {
         this.startAt = builder.startAt;
         this.recurring = builder.recurring;
         this.state = builder.state;
-        this.buildings = builder.buildings;
     }
 
     public static class Builder{
         private String name;
         private Integer duration;
-        private Timestamp startAt;
+        private LocalDateTime startAt;
         private boolean recurring;
         private TransactionState state;
-        private List<Building> buildings;
-
-        public Builder buildings(List<Building> buildings) {
-            this.buildings = buildings;
-            return this;
-        }
 
         public Builder name(String name) {
             this.name = name;
@@ -111,7 +99,7 @@ public class Transaction {
             return this;
         }
 
-        public Builder startAt(Timestamp startAt) {
+        public Builder startAt(LocalDateTime startAt) {
             this.startAt = startAt;
             return this;
         }
