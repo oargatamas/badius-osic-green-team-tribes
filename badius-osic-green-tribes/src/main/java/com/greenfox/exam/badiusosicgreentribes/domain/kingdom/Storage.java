@@ -1,19 +1,25 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Embeddable
 public class Storage {
+
     private Integer food;
+
     private Integer gold;
+
+    @PrimaryKeyJoinColumn(name = "defender_army")
+    @OneToOne
     private Army defenderArmy;
-    @Transient
+
+    @OneToOne
     private Army army;
-    @Transient
+
+    @OneToMany
     private List<Building> buildings;
 
     public Storage() {

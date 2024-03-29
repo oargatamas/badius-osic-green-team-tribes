@@ -13,16 +13,22 @@ public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private Integer level;
+
     private Integer hp;
+
+    @Enumerated(value = EnumType.STRING)
     private BuildingType type;
-    @Transient
-    private Storage storage;
-    @ManyToMany (mappedBy = "buildings")
+
+    @OneToMany
     private List<Transaction> transactions;
+
     @Embedded
     private Cost cost;
+
     @ManyToOne
     private Kingdom kingdom;
 
@@ -58,10 +64,6 @@ public class Building {
         return type;
     }
 
-    public Storage getStorage() {
-        return storage;
-    }
-
     public List<Transaction> getTransactions() {
         return transactions;
     }
@@ -90,9 +92,6 @@ public class Building {
         this.type = type;
     }
 
-    public void setStorage(Storage storage) {
-        this.storage = storage;
-    }
 
     public void setCost(Cost cost) {
         this.cost = cost;
@@ -135,11 +134,6 @@ public class Building {
             return this;
         }
 
-        public Builder storage(Storage storage) {
-            this.storage = storage;
-            return this;
-        }
-
         public Builder transactions(List<Transaction> transactions) {
             this.transactions = transactions;
             return this;
@@ -158,7 +152,6 @@ public class Building {
         this.level = builder.level;
         this.hp = builder.hp;
         this.type = builder.type;
-        this.storage = builder.storage;
         this.transactions = builder.transactions;
         this.cost = builder.cost;
         this.kingdom = builder.kingdom;

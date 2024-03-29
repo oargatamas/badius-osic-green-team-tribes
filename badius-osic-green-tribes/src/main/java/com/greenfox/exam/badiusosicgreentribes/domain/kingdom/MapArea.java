@@ -6,13 +6,13 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class MapArea {
 
-    @Column(name = "center_width")
+
     private Integer width;
-    @Column (name = "center_height")
+
     private Integer height;
-    @Column (name = "center_top")
+
     private Integer top;
-    @Column (name = "center_left")
+
     private Integer left;
 
     public MapArea() {

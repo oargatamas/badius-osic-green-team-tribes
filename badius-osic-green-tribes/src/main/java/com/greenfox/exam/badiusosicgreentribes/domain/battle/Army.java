@@ -12,16 +12,22 @@ public class Army {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private ArmyState state;
+
     private Integer size;
+
     @Embedded
     private UnitStats stats;
-    @Transient
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "army")
     private List<Troop> troops;
-    @OneToOne
-    @JoinColumn (name = "kingdom_id")
+
+    @ManyToOne
     private Kingdom kingdom;
+
 
     public Army() {
     }

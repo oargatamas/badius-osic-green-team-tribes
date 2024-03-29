@@ -4,33 +4,60 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.GameMap;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "user_id")
     private Long userId;
+    
+    @Column(name = "user_name")
     private String userName;
+    
     private String email;
+    
+    @Column(name = "first_name")
     private String firstName;
+    
+    @Column(name = "last_name")
     private String lastName;
+    
+    @Column(name = "is_verified")
     private Boolean isVerified;
+    
+    @Column(name = "password_hash")
     private String passwordHash;
-    private Timestamp createdAt;
-    private Timestamp lastLogin;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+    
     @Transient
     private List<Kingdom> kingdoms;
+    
+    @Column(name = "user_role")
+    @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
+    
     @ManyToMany
     @JoinTable(
             name = "Maps_Users",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "map_id"))
     private List<GameMap> maps;
+
+    
+    public User() {
+    }
 
     public Long getUserId() {
         return userId;
@@ -40,8 +67,6 @@ public class User {
         this.userId = userId;
     }
 
-    public User() {
-    }
 
     public Long getId() {
         return id;
@@ -95,19 +120,19 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getLastLogin() {
+    public LocalDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Timestamp lastLogin) {
+    public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 
@@ -143,8 +168,8 @@ public class User {
         private String lastName;
         private Boolean isVerified;
         private String passwordHash;
-        private Timestamp createdAt;
-        private Timestamp lastLogin;
+        private LocalDateTime createdAt;
+        private LocalDateTime lastLogin;
         private List<Kingdom> kingdoms;
         private UserRole userRole;
         private List<GameMap> maps;
@@ -189,12 +214,12 @@ public class User {
             return this;
         }
 
-        public Builder createdAt(Timestamp createdAt) {
+        public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public Builder lastLogin(Timestamp lastLogin) {
+        public Builder lastLogin(LocalDateTime lastLogin) {
             this.lastLogin = lastLogin;
             return this;
         }

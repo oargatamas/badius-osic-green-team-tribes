@@ -8,8 +8,10 @@ public class Cost {
 
     @Column (name = "cost_duration")
     private Integer duration;
+
     @Column (name = "cost_food")
     private Integer food;
+
     @Column (name = "cost_gold")
     private Integer gold;
 

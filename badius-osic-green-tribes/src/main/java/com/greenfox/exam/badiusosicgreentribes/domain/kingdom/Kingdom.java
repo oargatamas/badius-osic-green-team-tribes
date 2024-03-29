@@ -10,14 +10,21 @@ public class Kingdom {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private String ownerName;
+
     private Integer coordinateX;
+
     private Integer coordinateY;
+
     @ManyToOne
     private User owner;
+
     @ManyToOne
     private GameMap map;
+
     @Embedded
     private Storage storage;
 
