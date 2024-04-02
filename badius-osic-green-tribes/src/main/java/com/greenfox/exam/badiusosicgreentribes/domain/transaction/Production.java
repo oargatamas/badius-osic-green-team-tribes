@@ -2,9 +2,17 @@ package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Productions")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Production extends Transaction{
 
     private Integer quantity;
@@ -17,53 +25,4 @@ public class Production extends Transaction{
     @ManyToOne
     private Kingdom targetKingdom;
 
-
-    public Production() {
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public ProductionUnitType getType() {
-        return type;
-    }
-
-    public void setType(ProductionUnitType type) {
-        this.type = type;
-    }
-
-    public Kingdom getTargetKingdom() {
-        return targetKingdom;
-    }
-
-    public void setTargetKingdom(Kingdom targetKingdom) {
-        this.targetKingdom = targetKingdom;
-    }
-
-    private Production(Builder builder){
-        this.quantity = builder.quantity;
-        this.type = builder.type;
-    }
-    public static class Builder{
-        private Integer quantity;
-        private ProductionUnitType type;
-
-        public Builder quantity(Integer quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder type(ProductionUnitType type) {
-            this.type = type;
-            return this;
-        }
-        public Production build(){
-            return new Production(this);
-        }
-    }
 }
