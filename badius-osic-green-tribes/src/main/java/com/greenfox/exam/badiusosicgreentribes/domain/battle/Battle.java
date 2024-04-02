@@ -1,10 +1,7 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,8 @@ import java.util.List;
 @Builder
 public class Battle {
     private BattleState state;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Turn> turns;
     private Army attacker;
     private Army defender;
