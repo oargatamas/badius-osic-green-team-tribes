@@ -27,6 +27,12 @@ public class TransactionService {
         List<Transaction> expiredTransactions = filterExpiredTransactions(transactions);
         expiredTransactions.forEach(transaction -> {
             TransactionHandler<Transaction> handler = handlerFactory.getHandler(transaction);
+
+            //TODO itt állapodj meg Dórival, hogy mi legyen a factory kezelési módszere ( Null-t ad vissza vagy NotFoundException-t ).
+            // Ha nincs handler akkor a kódunk hibás és ha hibás a kód akkor nem biztos, hogy szerencsés elbuktatni a tranzakciókat.
+            // Ilyenkor én javaslom, hogy pusztuljon el az egész app és ne is állítson a tranzakciókon.
+
+            //FIXME szerintem a repository save kikerülhet az IF-ből, mert így is úgyis állítasz egy állapotot rajta.
             if (handler != null) {
                 handler.confirm(transaction);
                 transaction.setState(TransactionState.COMPLETED);
