@@ -1,14 +1,50 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.Cost;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "Units")
 public class Unit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
+
+    @Column(name = "icon_url")
     private String iconUrl;
+
+    @Embedded
     private UnitStats stats;
+
+    @Column(name = "unit_type")
+    @Enumerated(value = EnumType.STRING)
     private UnitType type;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "duration", column = @Column(name = "creation_cost_duration")),
+            @AttributeOverride(name = "food", column = @Column(name = "creation_cost_food")),
+            @AttributeOverride(name = "gold", column = @Column(name = "creation_cost_gold")),
+    })
     private Cost creationCost;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "duration", column = @Column(name = "upgrade_cost_duration")),
+            @AttributeOverride(name = "food", column = @Column(name = "upgrade_cost_food")),
+            @AttributeOverride(name = "gold", column = @Column(name = "upgrade_cost_gold")),
+    })
     private Cost upgradeCost;
+
+    public Unit() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -58,7 +94,7 @@ public class Unit {
         this.upgradeCost = upgradeCost;
     }
 
-    public static class Builder{
+    public static class Builder {
         private String name;
         private String iconUrl;
         private UnitStats stats;
@@ -96,12 +132,12 @@ public class Unit {
             return this;
         }
 
-        public Unit build(){
+        public Unit build() {
             return new Unit(this);
         }
     }
 
-    private Unit (Builder builder){
+    private Unit(Builder builder) {
         this.name = builder.name;
         this.iconUrl = builder.iconUrl;
         this.stats = builder.stats;

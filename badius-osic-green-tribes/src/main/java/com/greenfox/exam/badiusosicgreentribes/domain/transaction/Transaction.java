@@ -1,15 +1,35 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
-import java.sql.Timestamp;
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table (name = "Transactions")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     private String name;
+    
     private Integer duration;
-    private Timestamp startAt;
+
+    @Column(name = "start_at")
+    private LocalDateTime startAt;
+    
     private boolean recurring;
+    
+    @Enumerated(value = EnumType.STRING)
     private TransactionState state;
 
+
     protected Transaction(){}
+
     public String getName() {
         return name;
     }
@@ -26,11 +46,11 @@ public class Transaction {
         this.duration = duration;
     }
 
-    public Timestamp getStartAt() {
+    public LocalDateTime getStartAt() {
         return startAt;
     }
 
-    public void setStartAt(Timestamp startAt) {
+    public void setStartAt(LocalDateTime startAt) {
         this.startAt = startAt;
     }
 
@@ -49,6 +69,11 @@ public class Transaction {
     public void setState(TransactionState state) {
         this.state = state;
     }
+
+    public Long getId() {
+        return id;
+    }
+
     private Transaction(Builder builder){
         this.name = builder.name;
         this.duration = builder.duration;
@@ -56,10 +81,11 @@ public class Transaction {
         this.recurring = builder.recurring;
         this.state = builder.state;
     }
+
     public static class Builder{
         private String name;
         private Integer duration;
-        private Timestamp startAt;
+        private LocalDateTime startAt;
         private boolean recurring;
         private TransactionState state;
 
@@ -73,7 +99,7 @@ public class Transaction {
             return this;
         }
 
-        public Builder startAt(Timestamp startAt) {
+        public Builder startAt(LocalDateTime startAt) {
             this.startAt = startAt;
             return this;
         }

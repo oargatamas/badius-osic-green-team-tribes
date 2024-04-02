@@ -1,10 +1,22 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class MapArea {
+
+
     private Integer width;
+
     private Integer height;
+
     private Integer top;
+
     private Integer left;
+
+    public MapArea() {
+    }
 
     public Integer getWidth() {
         return width;

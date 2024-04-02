@@ -2,17 +2,50 @@ package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.Cost;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
+import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
+@Table (name = "Buildings")
 public class Building {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
+
     private Integer level;
+
     private Integer hp;
+
+    @Enumerated(value = EnumType.STRING)
     private BuildingType type;
-    private Storage storage;
+
+    @OneToMany
     private List<Transaction> transactions;
+
+    @Embedded
     private Cost cost;
+
+    @ManyToOne
+    private Kingdom kingdom;
+
+    public Building() {
+    }
+
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    public void setKingdom(Kingdom kingdom) {
+        this.kingdom = kingdom;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -29,10 +62,6 @@ public class Building {
 
     public BuildingType getType() {
         return type;
-    }
-
-    public Storage getStorage() {
-        return storage;
     }
 
     public List<Transaction> getTransactions() {
@@ -63,9 +92,6 @@ public class Building {
         this.type = type;
     }
 
-    public void setStorage(Storage storage) {
-        this.storage = storage;
-    }
 
     public void setCost(Cost cost) {
         this.cost = cost;
@@ -79,7 +105,14 @@ public class Building {
         private Storage storage;
         private List<Transaction> transactions;
         private Cost cost;
+        private Kingdom kingdom;
+
         public Builder(){}
+
+        public Builder kingdom(Kingdom kingdom) {
+            this.kingdom = kingdom;
+            return this;
+        }
 
         public Builder name(String name) {
             this.name = name;
@@ -101,11 +134,6 @@ public class Building {
             return this;
         }
 
-        public Builder storage(Storage storage) {
-            this.storage = storage;
-            return this;
-        }
-
         public Builder transactions(List<Transaction> transactions) {
             this.transactions = transactions;
             return this;
@@ -124,8 +152,8 @@ public class Building {
         this.level = builder.level;
         this.hp = builder.hp;
         this.type = builder.type;
-        this.storage = builder.storage;
         this.transactions = builder.transactions;
         this.cost = builder.cost;
+        this.kingdom = builder.kingdom;
     }
 }

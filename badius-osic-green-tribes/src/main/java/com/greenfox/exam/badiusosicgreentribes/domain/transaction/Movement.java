@@ -1,10 +1,23 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "Movements")
 public class Movement extends Transaction{
+
+    @ManyToOne
     private Kingdom origin;
+
+    @ManyToOne
     private Kingdom destination;
+
+    public Movement() {
+
+    }
 
     public Kingdom getOrigin() {
         return origin;

@@ -1,15 +1,40 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
+import jakarta.persistence.*;
+import jakarta.websocket.ClientEndpoint;
 
-public class Kingdom{
+@Entity
+@Table (name = "Kingdoms")
+public class Kingdom {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
-    private String ownerName;
+
+    @Column(name = "coordinate_x")
     private Integer coordinateX;
+
+    @Column(name = "coordinate_y")
     private Integer coordinateY;
+
+    @ManyToOne
     private User owner;
+
+    @ManyToOne
     private GameMap map;
+
+    @Embedded
     private Storage storage;
+
+    public Kingdom() {
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public static class Builder{
         private String name;
@@ -62,7 +87,6 @@ public class Kingdom{
 
     private Kingdom (Builder builder){
         this.name = builder.name;
-        this.ownerName = builder.ownerName;
         this.coordinateX = builder.coordinateX;
         this.coordinateY = builder.coordinateY;
         this.owner = builder.owner;
@@ -79,14 +103,6 @@ public class Kingdom{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
     }
 
     public Integer getCoordinateX() {

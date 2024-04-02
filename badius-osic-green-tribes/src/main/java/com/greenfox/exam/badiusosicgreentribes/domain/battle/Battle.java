@@ -1,5 +1,7 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.battle;
 
+import jakarta.persistence.Entity;
+
 import java.util.List;
 
 public class Battle {
