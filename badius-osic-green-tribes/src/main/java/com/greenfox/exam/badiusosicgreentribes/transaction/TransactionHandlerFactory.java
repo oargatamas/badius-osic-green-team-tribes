@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionHandlerFactory {
 
-    private MovementRepository movementRepository;
-    private ProductionRepository productionRepository;
-    private UpgradeRepository upgradeRepository;
+    private MovementRepository movementRepository; // FIXME itt nincs szükség repository-ra.
+    private ProductionRepository productionRepository; // FIXME itt nincs szükség repository-ra.
+    private UpgradeRepository upgradeRepository; // FIXME itt nincs szükség repository-ra.
     private BeanFactory beanFactory;
     private TransactionHandlerRegistry handlerRegistry;
 
-    @Autowired
+    @Autowired //FIXME nem kell több függőség mint a BeanFactory és TransactionHandlerRegistry
     public TransactionHandlerFactory(BeanFactory beanFactory, TransactionHandlerRegistry handlerRegistry, MovementRepository movementRepository,
                                      ProductionRepository productionRepository,
                                      UpgradeRepository upgradeRepository) {
@@ -34,6 +34,9 @@ public class TransactionHandlerFactory {
         this.upgradeRepository = upgradeRepository;
     }
 
+
+    //FIXME Nem ez a helyes működés. Ez a metódus a paraméterként kapott TransactionType-ot kell átforgassa Class<?> -ra (a handlerRegistry-vel),
+    // amit utána paraméterként felhasználhat a beanFactory.getBean()-hez. Amit a beanfactory kiad azzal kell itt visszatérni
     public TransactionHandler<? extends Transaction> getHandler(TransactionType type){
         switch (type) {
             case MOVEMENT:
