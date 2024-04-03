@@ -17,36 +17,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionHandlerFactory {
 
-    private MovementRepository movementRepository; // FIXME itt nincs szükség repository-ra.
-    private ProductionRepository productionRepository; // FIXME itt nincs szükség repository-ra.
-    private UpgradeRepository upgradeRepository; // FIXME itt nincs szükség repository-ra.
     private BeanFactory beanFactory;
     private TransactionHandlerRegistry handlerRegistry;
 
-    @Autowired //FIXME nem kell több függőség mint a BeanFactory és TransactionHandlerRegistry
-    public TransactionHandlerFactory(BeanFactory beanFactory, TransactionHandlerRegistry handlerRegistry, MovementRepository movementRepository,
-                                     ProductionRepository productionRepository,
-                                     UpgradeRepository upgradeRepository) {
+    public TransactionHandlerFactory(BeanFactory beanFactory, TransactionHandlerRegistry handlerRegistry) {
         this.beanFactory = beanFactory;
         this.handlerRegistry = handlerRegistry;
-        this.movementRepository = movementRepository;
-        this.productionRepository = productionRepository;
-        this.upgradeRepository = upgradeRepository;
     }
 
-
-    //FIXME Nem ez a helyes működés. Ez a metódus a paraméterként kapott TransactionType-ot kell átforgassa Class<?> -ra (a handlerRegistry-vel),
-    // amit utána paraméterként felhasználhat a beanFactory.getBean()-hez. Amit a beanfactory kiad azzal kell itt visszatérni
     public TransactionHandler<? extends Transaction> getHandler(TransactionType type){
-        switch (type) {
-            case MOVEMENT:
-                return new MovementHandler(movementRepository);
-            case PRODUCTION:
-                return new ProductionHandler(productionRepository);
-            case UPGRADE:
-                return new UpgradeHandler(upgradeRepository);
-            default:
-                throw new IllegalArgumentException("Invalid Transaction Type");
-        }
+        return beanFactory.getBean(handlerRegistry.get(type));
     }
 }

@@ -20,20 +20,11 @@ public class TransactionService {
 
     TransactionHandlerFactory handlerFactory;
     TransactionRepository repository;
-    BeanRegistry<TransactionType, TransactionHandler<?>> handlerRegistry;
 
     public TransactionService(TransactionHandlerFactory handlerFactory,
-                              TransactionRepository repository,
-                              BeanRegistry<TransactionType, TransactionHandler<?>> handlerRegistry) {
+                              TransactionRepository repository) {
         this.handlerFactory = handlerFactory;
         this.repository = repository;
-        this.handlerRegistry = handlerRegistry;
-
-        //FIXME ez a feltöltés a Spring Configuration része kell legyen.
-        for (TransactionType type : TransactionType.values()) {
-            handlerRegistry.add(type, (Class<? extends TransactionHandler<?>>) handlerFactory.getHandler(type).getClass());
-            //Todo casting does not seem quite right here
-        }
     }
 
     public void checkTransactions(){
