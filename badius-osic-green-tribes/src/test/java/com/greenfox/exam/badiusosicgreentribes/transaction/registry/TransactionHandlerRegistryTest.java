@@ -24,16 +24,20 @@ class TransactionHandlerRegistryTest {
 
     @Test
     void add() {
-        HashMap<TransactionType, Class> testMap = new HashMap<>();
-        testMap.put(TransactionType.MOVEMENT, MovementHandler.class);
-        handlerRegistry.add(TransactionType.MOVEMENT, MovementHandler.class);
-        assertEquals(testMap.get(TransactionType.MOVEMENT), handlerRegistry.get(TransactionType.MOVEMENT));
+        //Test & Assert
+        assertDoesNotThrow(() -> handlerRegistry.add(TransactionType.MOVEMENT, MovementHandler.class));
     }
 
     @Test
     void get() {
+        //Setup
         handlerRegistry.add(TransactionType.MOVEMENT, MovementHandler.class);
-        assertEquals(MovementHandler.class, handlerRegistry.get(TransactionType.MOVEMENT));
+
+        //Test
+        Class<? extends TransactionHandler> result = handlerRegistry.get(TransactionType.MOVEMENT);
+
+        //Assert
+        assertEquals(MovementHandler.class, result);
     }
 
     @Test
