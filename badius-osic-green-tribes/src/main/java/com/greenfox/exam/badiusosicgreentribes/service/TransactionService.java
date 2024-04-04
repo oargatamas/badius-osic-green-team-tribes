@@ -27,7 +27,11 @@ public class TransactionService {
         List<Transaction> expiredTransactions = filterExpiredTransactions(transactions);
         expiredTransactions.forEach(transaction -> {
             TransactionHandler<Transaction> handler = handlerFactory.getHandler(transaction);
-            handler.confirm(transaction);
+            try {
+                handler.confirm(transaction);
+            } catch (Exception e){
+                transaction.setState(TransactionState.FAILED);
+            }
             transaction.setState(TransactionState.COMPLETED);
         });
     }
