@@ -35,4 +35,6 @@ public class Transaction {
     @Enumerated(value = EnumType.STRING)
     private TransactionState state;
 
+    @Enumerated(value = EnumType.STRING)
+    private TransactionType type;
 }
