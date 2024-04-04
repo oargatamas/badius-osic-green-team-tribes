@@ -1,6 +1,7 @@
 package com.greenfox.exam.badiusosicgreentribes.repository.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
+import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Movement;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionState;
@@ -40,7 +41,7 @@ class TransactionRepositoryTest {
 
         Transaction savedTransaction = transactionRepository.save(transaction);
 
-        assertThat(savedTransaction).isNotNull();
+        assertThat(savedTransaction.getId()).isNotNull();
     }
 
     @Test
@@ -52,6 +53,7 @@ class TransactionRepositoryTest {
         Transaction updatedTransaction = transactionRepository.save(savedTransaction);
 
         Transaction retrievedProduction = transactionRepository.findById(savedTransaction.getId()).orElse(null);
+        assertNotNull(retrievedProduction);
         assertEquals(updatedTransaction, retrievedProduction);
     }
 
@@ -61,9 +63,22 @@ class TransactionRepositoryTest {
 
         Transaction savedTransaction = transactionRepository.save(transaction);
 
-        Optional<Transaction> retrievedTransactionOptional = transactionRepository.findById(savedTransaction.getId());
+        Transaction retrievedTransaction = transactionRepository.findById(savedTransaction.getId()).orElse(null);
 
-        assertEquals(savedTransaction, retrievedTransactionOptional.orElse(null));
+        assertNotNull(retrievedTransaction);
+        assertEquals(savedTransaction, retrievedTransaction);
+    }
+
+    @Test
+    @DisplayName("JUnit test for failing to find a Transaction by ID operation")
+    public void testFindByIdToFail() {
+
+        transactionRepository.save(transaction);
+        long nonExistingId = -1;
+
+        Optional<Transaction> retrievedTransactionOptional = transactionRepository.findById(nonExistingId);
+
+        assertFalse(retrievedTransactionOptional.isPresent());
     }
 
     @Test

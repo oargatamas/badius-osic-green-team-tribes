@@ -39,7 +39,7 @@ public class MovementRepositoryTest {
 
         Movement savedMovement = movementRepository.save(movement);
 
-        assertThat(savedMovement).isNotNull();
+        assertThat(savedMovement.getId()).isNotNull();
     }
 
     @Test
@@ -52,6 +52,7 @@ public class MovementRepositoryTest {
         Movement updatedMovement = movementRepository.save(savedMovement);
 
         Movement retrievedMovement = movementRepository.findById(savedMovement.getId()).orElse(null);
+        assertNotNull(retrievedMovement);
         assertEquals(updatedMovement, retrievedMovement);
         assertEquals(newOrigin, retrievedMovement.getOrigin());
     }
@@ -64,7 +65,20 @@ public class MovementRepositoryTest {
 
         Optional<Movement> retrievedMovementOptional = movementRepository.findById(savedMovement.getId());
 
+        assertNotNull(retrievedMovementOptional);
         assertEquals(savedMovement, retrievedMovementOptional.orElse(null));
+    }
+
+    @Test
+    @DisplayName("JUnit test for failing to find a Movement by ID operation")
+    public void testFindByIdToFail() {
+
+        movementRepository.save(movement);
+        long nonExistingId = -1;
+
+        Optional<Movement> retrievedMovementOptional = movementRepository.findById(nonExistingId);
+
+        assertFalse(retrievedMovementOptional.isPresent());
     }
 
     @Test

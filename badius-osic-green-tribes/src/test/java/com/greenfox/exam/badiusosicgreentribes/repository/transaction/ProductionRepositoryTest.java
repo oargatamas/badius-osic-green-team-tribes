@@ -3,6 +3,7 @@ package com.greenfox.exam.badiusosicgreentribes.repository.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 
+import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Movement;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.ProductionUnitType;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +43,7 @@ class ProductionRepositoryTest {
 
         Production savedProduction = productionRepository.save(production);
 
-        assertThat(savedProduction).isNotNull();
+        assertThat(savedProduction.getId()).isNotNull();
     }
 
     @Test
@@ -55,6 +56,7 @@ class ProductionRepositoryTest {
         Production updatedProduction = productionRepository.save(savedProduction);
 
         Production retrievedProduction = productionRepository.findById(savedProduction.getId()).orElse(null);
+        assertNotNull(retrievedProduction);
         assertEquals(updatedProduction, retrievedProduction);
         assertEquals(newTargetKingdom, retrievedProduction.getTargetKingdom());
     }
@@ -65,9 +67,22 @@ class ProductionRepositoryTest {
 
         Production savedProduction = productionRepository.save(production);
 
-        Optional<Production> retrievedProductionOptional = productionRepository.findById(savedProduction.getId());
+        Production retrievedProduction = productionRepository.findById(savedProduction.getId()).orElse(null);
 
-        assertEquals(savedProduction, retrievedProductionOptional.orElse(null));
+        assertNotNull(retrievedProduction);
+        assertEquals(savedProduction, retrievedProduction);
+    }
+
+    @Test
+    @DisplayName("JUnit test for failing to find a Production by ID operation")
+    public void testFindByIdToFail() {
+
+        productionRepository.save(production);
+        long nonExistingId = -1;
+
+        Optional<Production> retrievedProductionOptional = productionRepository.findById(nonExistingId);
+
+        assertFalse(retrievedProductionOptional.isPresent());
     }
 
     @Test
