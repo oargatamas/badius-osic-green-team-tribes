@@ -52,6 +52,7 @@ public class Production extends Transaction{
     public static class Builder{
         private Integer quantity;
         private ProductionUnitType type;
+        private Kingdom targetKingdom;
 
         public Builder quantity(Integer quantity) {
             this.quantity = quantity;
@@ -62,6 +63,12 @@ public class Production extends Transaction{
             this.type = type;
             return this;
         }
+
+        public Builder targetKingdom(Kingdom targetKingdom){
+            this.targetKingdom = targetKingdom;
+            return this;
+        }
+
         public Production build(){
             return new Production(this);
         }

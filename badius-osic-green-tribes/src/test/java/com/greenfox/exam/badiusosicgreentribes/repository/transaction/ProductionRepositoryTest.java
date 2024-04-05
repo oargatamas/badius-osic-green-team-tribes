@@ -30,7 +30,7 @@ class ProductionRepositoryTest {
 
         Kingdom targetKingdom = new Kingdom();
 
-        production = Production.builder()
+        production = new Production.Builder()
                 .quantity(1)
                 .type(ProductionUnitType.FOOD)
                 .targetKingdom(targetKingdom)
