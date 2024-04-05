@@ -2,106 +2,28 @@ package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "Productions")
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Production extends Transaction{
 
     private Integer quantity;
 
     @Enumerated(value = EnumType.STRING)
-    private ProductionUnitType type;
+    private ProductionUnitType productionType;
 
 
     @JoinColumn(name = "target_kingdom")
     @ManyToOne
     private Kingdom targetKingdom;
 
-
-    public Production() {
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public ProductionUnitType getType() {
-        return type;
-    }
-
-    public void setType(ProductionUnitType type) {
-        this.type = type;
-    }
-
-    public Kingdom getTargetKingdom() {
-        return targetKingdom;
-    }
-
-    public void setTargetKingdom(Kingdom targetKingdom) {
-        this.targetKingdom = targetKingdom;
-    }
-
-    private Production(Builder builder){
-        this.quantity = builder.quantity;
-        this.type = builder.type;
-        this.setName(builder.name);
-        this.setDuration(builder.duration);
-        this.setStartAt(builder.startAt);
-        this.setRecurring(builder.recurring);
-        this.setState(builder.state);
-    }
-    public static class Builder{
-        private Integer quantity;
-        private ProductionUnitType type;
-
-        private String name;
-        private Integer duration;
-        private LocalDateTime startAt;
-        private boolean recurring;
-        private TransactionState state;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder duration(Integer duration) {
-            this.duration = duration;
-            return this;
-        }
-
-        public Builder startAt(LocalDateTime startAt) {
-            this.startAt = startAt;
-            return this;
-        }
-
-        public Builder recurring(boolean recurring) {
-            this.recurring = recurring;
-            return this;
-        }
-
-        public Builder state(TransactionState state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder quantity(Integer quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder type(ProductionUnitType type) {
-            this.type = type;
-            return this;
-        }
-        public Production build(){
-            return new Production(this);
-        }
-    }
 }

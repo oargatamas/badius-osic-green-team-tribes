@@ -5,6 +5,6 @@ import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionTyp
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.TransactionHandler;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class TransactionHandlerRegistry extends BeanRegistry<TransactionType, TransactionHandler>{
 }

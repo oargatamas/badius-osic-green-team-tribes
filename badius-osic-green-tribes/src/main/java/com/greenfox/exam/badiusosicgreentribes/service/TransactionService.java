@@ -5,6 +5,7 @@ import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionSta
 import com.greenfox.exam.badiusosicgreentribes.repository.transaction.TransactionRepository;
 import com.greenfox.exam.badiusosicgreentribes.transaction.TransactionHandlerFactory;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.TransactionHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionService {
 
     TransactionHandlerFactory handlerFactory;
