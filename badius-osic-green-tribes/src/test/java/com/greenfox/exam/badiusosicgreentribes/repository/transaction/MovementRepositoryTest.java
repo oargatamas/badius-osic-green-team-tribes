@@ -27,7 +27,7 @@ public class MovementRepositoryTest {
         Kingdom origin = new Kingdom();
         Kingdom destination = new Kingdom();
 
-        movement = new Movement.Builder()
+        movement = Movement.builder()
                 .origin(origin)
                 .destination(destination)
                 .build();

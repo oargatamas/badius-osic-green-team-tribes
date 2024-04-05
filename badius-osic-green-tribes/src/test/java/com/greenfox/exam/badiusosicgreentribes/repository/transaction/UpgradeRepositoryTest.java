@@ -27,7 +27,7 @@ class UpgradeRepositoryTest {
     @BeforeEach
     public void setupTestData(){
 
-        upgrade = new Upgrade.Builder()
+        upgrade = Upgrade.builder()
                 .type(ProductionUnitType.FOOD)
                 .targetLevel(5)
                 .targetId(1)

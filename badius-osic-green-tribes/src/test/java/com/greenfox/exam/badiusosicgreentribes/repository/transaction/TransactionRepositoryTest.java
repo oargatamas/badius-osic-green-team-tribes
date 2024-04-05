@@ -26,7 +26,7 @@ class TransactionRepositoryTest {
     @BeforeEach
     public void setupTestData(){
 
-        transaction = new Transaction.Builder()
+        transaction = Transaction.builder()
                 .name("Food Production")
                 .duration(120)
                 .startAt(LocalDateTime.now())
