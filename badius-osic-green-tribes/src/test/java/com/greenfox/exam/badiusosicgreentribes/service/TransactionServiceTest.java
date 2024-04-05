@@ -48,16 +48,6 @@ class TransactionServiceTest {
     @InjectMocks
     TransactionService transactionService;
 
-    /*
-    public static final long SCHEDULED_MOVEMENT_ID = 1L;
-    public static final long EXPIRED_MOVEMENT_ID = 2L;
-    public static final long SCHEDULED_UPGRADE_ID = 3L;
-    public static final long EXPIRED_UPGRADE_ID = 4L;
-    public static final long SCHEDULED_PRODUCTION_ID = 5L;
-    public static final long EXPIRED_PRODUCTION_ID = 6L;
-     */
-
-
     Movement scheduledMovement;
     Movement expiredMovement;
     Transaction scheduledUpgrade;
@@ -79,34 +69,9 @@ class TransactionServiceTest {
         scheduledProduction = getScheduledProduction();
         expiredProduction = getExpiredProduction();
 
-        /*
-        when(repository.findAll()).thenReturn(List.of(
-                scheduledMovement,
-                expiredMovement,
-                scheduledUpgrade,
-                expiredUpgrade,
-                scheduledProduction,
-                expiredProduction
-        ));
-         */
-
-
-        /*
-        when(repository.findById(SCHEDULED_MOVEMENT_ID)).thenReturn(Optional.of(scheduledMovement));
-        when(repository.findById(EXPIRED_MOVEMENT_ID)).thenReturn(Optional.of(expiredMovement));
-        when(repository.findById(SCHEDULED_UPGRADE_ID)).thenReturn(Optional.of(scheduledUpgrade));
-        when(repository.findById(EXPIRED_UPGRADE_ID)).thenReturn(Optional.of(expiredUpgrade));
-        when(repository.findById(SCHEDULED_PRODUCTION_ID)).thenReturn(Optional.of(scheduledProduction));
-        when(repository.findById(EXPIRED_PRODUCTION_ID)).thenReturn(Optional.of(expiredProduction));
-         */
-
-
-        lenient().doReturn(movementHandler).when(handlerFactory).getHandler(scheduledMovement);
-        lenient().doReturn(movementHandler).when(handlerFactory).getHandler(expiredMovement);
-        lenient().doReturn(upgradeHandler).when(handlerFactory).getHandler(scheduledUpgrade);
-        lenient().doReturn(upgradeHandler).when(handlerFactory).getHandler(expiredUpgrade);
-        lenient().doReturn(productionHandler).when(handlerFactory).getHandler(scheduledProduction);
-        lenient().doReturn(productionHandler).when(handlerFactory).getHandler(expiredProduction);
+        lenient().doReturn(movementHandler).when(handlerFactory).getHandler(TransactionType.MOVEMENT);
+        lenient().doReturn(upgradeHandler).when(handlerFactory).getHandler(TransactionType.UPGRADE);
+        lenient().doReturn(productionHandler).when(handlerFactory).getHandler(TransactionType.PRODUCTION);
     }
 
 
@@ -180,7 +145,8 @@ class TransactionServiceTest {
 
 
     private Movement getScheduledMovement() {
-        return new Movement.Builder()
+        return Movement.builder()
+                .transactionType(TransactionType.MOVEMENT)
                 .state(TransactionState.SCHEDULED)
                 .startAt(SCHEDULED_CREATED_AT)
                 .duration(DURATION)
@@ -188,7 +154,8 @@ class TransactionServiceTest {
     }
 
     private Movement getExpiredMovement() {
-        return new Movement.Builder()
+        return Movement.builder()
+                .transactionType(TransactionType.MOVEMENT)
                 .state(TransactionState.SCHEDULED)
                 .startAt(EXPIRED_CREATED_AT)
                 .duration(DURATION)
@@ -196,7 +163,8 @@ class TransactionServiceTest {
     }
 
     private Upgrade getScheduledUpgrade() {
-        return new Upgrade.Builder()
+        return Upgrade.builder()
+                .transactionType(TransactionType.UPGRADE)
                 .state(TransactionState.SCHEDULED)
                 .startAt(SCHEDULED_CREATED_AT)
                 .duration(DURATION)
@@ -204,7 +172,8 @@ class TransactionServiceTest {
     }
 
     private Upgrade getExpiredUpgrade() {
-        return new Upgrade.Builder()
+        return Upgrade.builder()
+                .transactionType(TransactionType.UPGRADE)
                 .state(TransactionState.SCHEDULED)
                 .startAt(EXPIRED_CREATED_AT)
                 .duration(DURATION)
@@ -212,7 +181,8 @@ class TransactionServiceTest {
     }
 
     private Production getScheduledProduction() {
-        return new Production.Builder()
+        return Production.builder()
+                .transactionType(TransactionType.PRODUCTION)
                 .state(TransactionState.SCHEDULED)
                 .startAt(SCHEDULED_CREATED_AT)
                 .duration(DURATION)
@@ -220,7 +190,8 @@ class TransactionServiceTest {
     }
 
     private Production getExpiredProduction() {
-        return new Production.Builder()
+        return Production.builder()
+                .transactionType(TransactionType.PRODUCTION)
                 .state(TransactionState.SCHEDULED)
                 .startAt(EXPIRED_CREATED_AT)
                 .duration(DURATION)

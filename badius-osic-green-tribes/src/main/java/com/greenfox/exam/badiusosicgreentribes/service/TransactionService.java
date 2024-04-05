@@ -28,7 +28,7 @@ public class TransactionService {
         List<Transaction> transactions = repository.findTransactionsByStateIs(TransactionState.SCHEDULED);
         List<Transaction> expiredTransactions = filterExpiredTransactions(transactions);
         expiredTransactions.forEach(transaction -> {
-            TransactionHandler<Transaction> handler = handlerFactory.getHandler(transaction);
+            TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
             try {
                 handler.confirm(transaction);
                 transaction.setState(TransactionState.COMPLETED);
