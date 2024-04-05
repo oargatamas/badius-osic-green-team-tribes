@@ -3,6 +3,8 @@ package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Productions")
 public class Production extends Transaction{
@@ -48,10 +50,46 @@ public class Production extends Transaction{
     private Production(Builder builder){
         this.quantity = builder.quantity;
         this.type = builder.type;
+        this.setName(builder.name);
+        this.setDuration(builder.duration);
+        this.setStartAt(builder.startAt);
+        this.setRecurring(builder.recurring);
+        this.setState(builder.state);
     }
     public static class Builder{
         private Integer quantity;
         private ProductionUnitType type;
+
+        private String name;
+        private Integer duration;
+        private LocalDateTime startAt;
+        private boolean recurring;
+        private TransactionState state;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder duration(Integer duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Builder startAt(LocalDateTime startAt) {
+            this.startAt = startAt;
+            return this;
+        }
+
+        public Builder recurring(boolean recurring) {
+            this.recurring = recurring;
+            return this;
+        }
+
+        public Builder state(TransactionState state) {
+            this.state = state;
+            return this;
+        }
 
         public Builder quantity(Integer quantity) {
             this.quantity = quantity;

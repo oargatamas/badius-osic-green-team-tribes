@@ -22,21 +22,22 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    public void checkTransactions(){
+    public void checkTransactions() {
         List<Transaction> transactions = repository.findTransactionsByStateIs(TransactionState.SCHEDULED);
         List<Transaction> expiredTransactions = filterExpiredTransactions(transactions);
         expiredTransactions.forEach(transaction -> {
             TransactionHandler<Transaction> handler = handlerFactory.getHandler(transaction);
             try {
                 handler.confirm(transaction);
-            } catch (Exception e){
+                transaction.setState(TransactionState.COMPLETED);
+            } catch (Exception e) {
                 transaction.setState(TransactionState.FAILED);
             }
-            transaction.setState(TransactionState.COMPLETED);
+            repository.save(transaction);
         });
     }
 
-    private List<Transaction> filterExpiredTransactions(List<Transaction> transactionList){
+    private List<Transaction> filterExpiredTransactions(List<Transaction> transactionList) {
         LocalDateTime now = LocalDateTime.now();
         return transactionList.stream()
                 .filter(transaction -> isTransactionExpired(transaction.getStartAt(), transaction.getDuration(), now))
