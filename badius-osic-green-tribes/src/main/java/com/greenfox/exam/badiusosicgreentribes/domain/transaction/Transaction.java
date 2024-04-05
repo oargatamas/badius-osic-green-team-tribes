@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Table (name = "Transactions")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,5 +37,5 @@ public class Transaction {
     private TransactionState state;
 
     @Enumerated(value = EnumType.STRING)
-    private TransactionType type;
+    private TransactionType transactionType;
 }
