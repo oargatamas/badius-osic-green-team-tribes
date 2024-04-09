@@ -1,6 +1,5 @@
 package com.greenfox.exam.badiusosicgreentribes.API.restcontrollers;
 
-
 import com.greenfox.exam.badiusosicgreentribes.domain.security.AuthenticationRequest;
 import com.greenfox.exam.badiusosicgreentribes.domain.security.AuthenticationResponse;
 import com.greenfox.exam.badiusosicgreentribes.service.security.MyUserDetailsService;
