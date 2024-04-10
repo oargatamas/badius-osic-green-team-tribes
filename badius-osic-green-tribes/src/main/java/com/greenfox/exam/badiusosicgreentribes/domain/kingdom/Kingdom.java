@@ -1,6 +1,6 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.common.Player;
+import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class Kingdom {
     private Integer coordinateY;
 
     @ManyToOne
-    private Player owner;
+    private User owner;
 
     @ManyToOne
     private GameMap map;

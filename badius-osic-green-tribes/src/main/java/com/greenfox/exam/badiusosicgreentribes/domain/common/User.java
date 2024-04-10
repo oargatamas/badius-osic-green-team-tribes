@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
