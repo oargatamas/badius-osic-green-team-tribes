@@ -1,6 +1,6 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
+import com.greenfox.exam.badiusosicgreentribes.domain.common.Player;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,6 +45,6 @@ public class GameMap {
     @ManyToMany(mappedBy = "maps")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<User> users;
+    private List<Player> players;
 
 }
