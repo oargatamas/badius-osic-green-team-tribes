@@ -31,6 +31,7 @@ public class JwtUtil {
         claims.put("userName",user.getUserName());
         claims.put("firstName",user.getFirstName());
         claims.put("lastName",user.getLastName());
+        claims.put("roles",List.of("ROLE_USER")); //TODO clean it up and get the roles from user
 
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
@@ -82,7 +83,7 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
-    private List<String> getRoles(Claims claims) {
+    public List<String> getRoles(Claims claims) {
         return (List<String>) claims.get("roles");
     }
 
