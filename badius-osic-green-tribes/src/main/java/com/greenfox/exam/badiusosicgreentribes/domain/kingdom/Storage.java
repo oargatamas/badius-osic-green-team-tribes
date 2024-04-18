@@ -21,8 +21,10 @@ public class Storage {
     @OneToOne
     private Army defenderArmy;
 
-    @OneToOne
-    private Army army;
+    @OneToMany
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Army> armies;
 
     @OneToMany
     @ToString.Exclude
