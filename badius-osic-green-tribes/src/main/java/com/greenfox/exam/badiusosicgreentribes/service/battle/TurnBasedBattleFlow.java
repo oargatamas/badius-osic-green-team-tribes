@@ -4,6 +4,7 @@ import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleLog;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleProperties;
 
+//Todo move to subpackage ( e.g. "flow")
 public class TurnBasedBattleFlow implements BattleFlow {
     @Override
     public BattleProperties prepare(Army attacker, Army defender) {
