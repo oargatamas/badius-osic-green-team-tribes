@@ -16,8 +16,4 @@ public class QueuedTurnSelector implements TurnSelector {
         return new Troop();
     }
 
-
-    private void applyDamage(Damage damage, Troop attacker, Troop defender){
-
-    }
 }
