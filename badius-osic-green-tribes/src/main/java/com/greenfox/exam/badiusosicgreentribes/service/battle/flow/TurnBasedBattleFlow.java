@@ -46,6 +46,10 @@ public class TurnBasedBattleFlow implements BattleFlow {
             chooseAttackerDefender(troop1, troop2);
             damage = damageCalculator.calcDamage(attacker, defender);
             applyDamage(damage, attacker, defender);
+            if(damage.getChanceToRepost() > 50 && defender.getQuantity() > 0){
+                damage = damageCalculator.calcDamage(defender, attacker);
+                applyDamage(damage, defender, attacker);
+            }
 
             if(attacker.getId() == troop1.getId()){
                 troop1 = attacker;
