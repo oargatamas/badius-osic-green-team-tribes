@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
@@ -6,13 +6,14 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.KingdomOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class KingdomAdapter implements KingdomOperations{
+public class KingdomAdapter implements KingdomOperations {
 
     KingdomRepository kingdomRepository;
 

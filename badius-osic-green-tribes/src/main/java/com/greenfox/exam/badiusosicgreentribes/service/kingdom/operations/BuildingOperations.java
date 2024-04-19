@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;

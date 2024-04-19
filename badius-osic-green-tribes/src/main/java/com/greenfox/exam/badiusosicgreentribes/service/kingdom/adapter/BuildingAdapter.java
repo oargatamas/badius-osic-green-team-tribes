@@ -1,9 +1,10 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.BuildingRepository;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.BuildingOperations;
 import org.springframework.stereotype.Component;
 
 @Component

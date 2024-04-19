@@ -1,8 +1,9 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.ArmyRepository;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.ArmyOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;

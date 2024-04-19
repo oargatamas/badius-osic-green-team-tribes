@@ -8,13 +8,21 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.ArmyAdapter;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.BuildingAdapter;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.KingdomAdapter;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.TroopAdapter;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.ArmyOperations;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.BuildingOperations;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.KingdomOperations;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.TroopOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class KingdomService implements KingdomOperations, BuildingOperations, ArmyOperations, TroopOperations{
+public class KingdomService implements KingdomOperations, BuildingOperations, ArmyOperations, TroopOperations {
 
     KingdomAdapter kingdomAdapter;
     BuildingAdapter buildingAdapter;

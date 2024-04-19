@@ -1,14 +1,15 @@
-package com.greenfox.exam.badiusosicgreentribes.service.kingdom;
+package com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitType;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.TroopRepository;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.TroopOperations;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TroopAdapter implements TroopOperations{
+public class TroopAdapter implements TroopOperations {
 
     TroopRepository troopRepository;
 
