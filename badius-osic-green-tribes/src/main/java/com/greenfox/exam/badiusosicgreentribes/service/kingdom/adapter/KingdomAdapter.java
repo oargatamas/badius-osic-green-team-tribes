@@ -23,31 +23,35 @@ public class KingdomAdapter implements KingdomOperations {
 
     @Override
     public Kingdom getKingdom(Long id) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public List<Kingdom> lisKingdoms(Map map) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public Kingdom placeKingdom(User user, String name) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public void removeKingdom(Long id) {
-
+        // TODO Implement method
     }
 
     @Override
     public void updateTreasury(Kingdom kingdom, Production transaction) {
-
+        // TODO Implement method
     }
 
     @Override
     public Transaction attackKingdom(Army attacker, Kingdom target) {
+        // TODO Implement method
         return null;
     }
 }

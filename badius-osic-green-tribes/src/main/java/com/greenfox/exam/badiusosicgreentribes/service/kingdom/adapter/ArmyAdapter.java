@@ -19,26 +19,30 @@ public class ArmyAdapter implements ArmyOperations {
 
     @Override
     public List<Troop> splitTroop(Troop troop1, List<Integer> distribution) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public Troop mergeTroop(Troop troop1, Troop troop2) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public Army splitArmy(Army fromArmy, Army desiredArmy) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public Army mergeArmy(Army targetArmy, List<Army> armiesToMerge) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public void removeArmy(Army armyToRemove) {
-
+        // TODO Implement method
     }
 }

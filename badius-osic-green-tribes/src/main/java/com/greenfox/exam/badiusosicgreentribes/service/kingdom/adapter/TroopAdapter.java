@@ -19,11 +19,13 @@ public class TroopAdapter implements TroopOperations {
 
     @Override
     public Transaction trainUnits(Kingdom kingdom, UnitType unit, Integer quantity) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public Transaction promoteTroop(Kingdom kingdom, Troop troopToUpgrade) {
+        // TODO Implement method
         return null;
     }
 }

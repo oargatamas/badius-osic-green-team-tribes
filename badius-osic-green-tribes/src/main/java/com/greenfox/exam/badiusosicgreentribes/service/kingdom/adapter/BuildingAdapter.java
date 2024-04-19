@@ -18,16 +18,18 @@ public class BuildingAdapter implements BuildingOperations {
 
     @Override
     public Transaction addBuilding(Kingdom kingdom, Building buildingToAdd) {
+        // TODO Implement method
         return null;
     }
 
     @Override
     public void destroyBuilding(Kingdom kingdom, Building buildingToDestroy) {
-
+        // TODO Implement method
     }
 
     @Override
     public Transaction upgradeBuilding(Kingdom kingdom, Building buildingToUpgrade) {
+        // TODO Implement method
         return null;
     }
 }
