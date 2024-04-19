@@ -27,7 +27,7 @@ public class KingdomAdapter implements KingdomOperations {
     }
 
     @Override
-    public List<Kingdom> lisKingdoms(MapArea map) {
+    public List<Kingdom> listKingdoms(MapArea map) {
         // TODO Implement method
         return null;
     }

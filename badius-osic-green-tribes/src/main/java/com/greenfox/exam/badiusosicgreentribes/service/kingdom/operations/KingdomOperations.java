@@ -12,7 +12,7 @@ import java.util.List;
 public interface KingdomOperations {
 
     Kingdom getKingdom(Long id);
-    List<Kingdom> lisKingdoms(MapArea map);
+    List<Kingdom> listKingdoms(MapArea map);
     Kingdom placeKingdom(User user, String name);
     void removeKingdom(Long id);
     void updateTreasury(Kingdom kingdom, Production transaction);

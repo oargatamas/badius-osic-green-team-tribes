@@ -77,8 +77,8 @@ public class KingdomService implements KingdomOperations, BuildingOperations, Ar
     }
 
     @Override
-    public List<Kingdom> lisKingdoms(MapArea map) {
-        return kingdomAdapter.lisKingdoms(map);
+    public List<Kingdom> listKingdoms(MapArea map) {
+        return kingdomAdapter.listKingdoms(map);
     }
 
     @Override
