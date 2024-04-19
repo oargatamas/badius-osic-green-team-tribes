@@ -5,26 +5,24 @@ import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.*;
 import com.greenfox.exam.badiusosicgreentribes.service.TransactionService;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.BattleFlow;
+import com.greenfox.exam.badiusosicgreentribes.service.battle.TurnSelector;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.calculator.DamageCalculator;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.KingdomService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@AllArgsConstructor
 public class TurnBasedBattleFlow implements BattleFlow {
     private TransactionService transactionService;
     private BeanFactory beanFactory;
     private KingdomService kingdomService;
 
-    private Troop attacker;
-    private Troop defender;
-    public TurnBasedBattleFlow(TransactionService transactionService, BeanFactory beanFactory , KingdomService kingdomService) {
-        this.transactionService = transactionService;
-        this.beanFactory = beanFactory;
-        this.kingdomService = kingdomService;
-    }
+    private TurnSelector selector;
+    private DamageCalculator damageCalculator;
+
 
     @Override
     public BattleProperties prepare(Army attacker, Army defender) {
@@ -33,70 +31,66 @@ public class TurnBasedBattleFlow implements BattleFlow {
 
     @Override
     public BattleLog battle(BattleProperties props) {
-        DamageCalculator damageCalculator = new DamageCalculator();
-        QueuedTurnSelector queuedTurnSelector = new QueuedTurnSelector();
+
         Army attackerArmy = props.getAttackerArmy();
         Army defenderArmy = props.getDefenderArmy();
-        Troop troop1;
-        Troop troop2;
-        Damage damage;
+
+        Troop attacker;
+        Troop defender;
+
         List<BattleTurn> turns = new ArrayList<>();
-        while (attackerArmy.getTroops().stream().anyMatch(t -> t.getQuantity() > 0) && defenderArmy.getTroops().stream().anyMatch(t -> t.getQuantity() > 0)){
-            troop1 = queuedTurnSelector.getAttacker(attackerArmy);
-            troop2 = queuedTurnSelector.getDefender(defenderArmy);
-            chooseAttackerDefender(troop1, troop2);
-            damage = damageCalculator.calcDamage(attacker, defender);
-            applyDamage(damage, attacker, defender);
-            if(damage.getChanceToRepost() > 50 && defender.getQuantity() > 0){
-                damage = damageCalculator.calcDamage(defender, attacker);
-                applyDamage(damage, defender, attacker);
+
+        //Todo rephrase to work until any of the army is depleted
+        while (!isArmyDepleted(attackerArmy) || !isArmyDepleted(defenderArmy)) {
+            attacker = selector.getAttacker(attackerArmy);
+            defender = selector.getDefender(defenderArmy);
+
+            //Todo calc speed and switch attck/def if needed
+
+            Damage firstHit = damageCalculator.calcDamage(attacker, defender);
+            applyDamage(firstHit, defender);
+            if (firstHit.getChanceToRepost() > 50 && defender.getQuantity() > 0) {
+                Damage repost = damageCalculator.calcDamage(defender, attacker);
+                applyDamage(repost, attacker);
             }
 
-            if(attacker.getId() == troop1.getId()){
-                troop1 = attacker;
-                troop2 = defender;
-            }else if(defender.getId() == troop1.getId()){
-                troop1 = defender;
-                troop2 = attacker;
-            }else throw new RuntimeException("Something went wrong");
-            turns.add(new BattleTurn(new TroopInfo(attacker.getUnit().toString(), attacker.getQuantity(), attacker.getStats().getHealth()), new TroopInfo(defender.getUnit().toString(), defender.getQuantity(), defender.getStats().getHealth()), damage.getDamage().toString()));
+            turns.add(BattleTurn.builder()
+                    .attacker(TroopInfo.builder()
+                            .unit(attacker.getUnit().toString())
+                            .quantity(attacker.getQuantity())
+                            .health(attacker.getStats().getHealth())
+                            .build())
+                    .defender(TroopInfo.builder()
+                            .unit(defender.getUnit().toString())
+                            .quantity(defender.getQuantity())
+                            .health(defenderArmy.getStats().getHealth())
+                            .build())
+                    .result("") // Todo implement a pretty print data. e.g.: "Unicors hit with 23 313. 34 vampires perished"
+                    .build());
         }
-        BattleResult attackerResult;
-        BattleResult defenderResult;
-        if(attackerArmy.getTroops().stream().allMatch(t -> t.getQuantity() < 1)){
-            attackerResult = BattleResult.builder().didItWin(false).build();
-            defenderResult = BattleResult.builder().didItWin(true).build();
-        }else if(defenderArmy.getTroops().stream().allMatch(t -> t.getQuantity() < 1)){
-            attackerResult = BattleResult.builder().didItWin(true).build();
-            defenderResult = BattleResult.builder().didItWin(false).build();
-        }else {
-            attackerResult = BattleResult.builder().didItWin(false).build();
-            defenderResult = BattleResult.builder().didItWin(false).build();
-        }
-        return new BattleLog(props, turns, attackerResult, defenderResult);
+
+        return BattleLog.builder()
+                .turns(turns)
+                .attackerResult(BattleResult.builder()
+                        .didItWin(isArmyDepleted(attackerArmy))
+                        .build())
+                .defenderResult(BattleResult.builder()
+                        .didItWin(isArmyDepleted(defenderArmy))
+                        .build())
+                .build();
     }
 
     @Override
     public void finalize(BattleLog log) {
 
     }
-    private void applyDamage(Damage damage, Troop attacker, Troop defender){
-        defender.getStats().setHealth(defender.getStats().getHealth() - damage.getDamage());
-        defender.setQuantity(defender.getQuantity() - damage.getNoDeadUnits());
+
+    private void applyDamage(Damage damage, Troop troop) {
+        troop.getStats().setHealth(troop.getStats().getHealth() - damage.getDamage());
+        troop.setQuantity(troop.getQuantity() - damage.getNoDeadUnits());
     }
-    private void chooseAttackerDefender(Troop troop1, Troop troop2){
-        int sp1 = (int)(Math.random() * 100 + 1 + troop1.getStats().getSpeed());
-        int sp2 = (int)(Math.random() * 100 + 1 + troop2.getStats().getSpeed());
-        if(sp1 == sp2){
-            chooseAttackerDefender(troop1, troop2);
-        } else if (sp1 > sp2) {
-            attacker = troop1;
-            defender = troop2;
-        }else {
-            attacker = troop2;
-            defender = troop1;
-        }
 
-
+    private boolean isArmyDepleted(Army army) {
+        return army.getTroops().stream().noneMatch(t -> t.getQuantity() > 0);
     }
 }
