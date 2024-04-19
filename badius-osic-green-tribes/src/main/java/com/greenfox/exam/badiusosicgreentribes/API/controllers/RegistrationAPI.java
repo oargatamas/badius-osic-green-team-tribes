@@ -25,8 +25,8 @@ public class RegistrationAPI {
     public ResponseEntity<?> login(@RequestBody ValidationRequest request) {
         // TODO
         return ResponseEntity.ok().build();
-    }@PostMapping("/registration")
-    public ResponseEntity<?> register(@RequestBody AuthorizationRequest request) {
+    }@PostMapping("/auth")
+    public ResponseEntity<?> authorize(@RequestBody AuthorizationRequest request) {
         // TODO
         return ResponseEntity.ok().build();
     }

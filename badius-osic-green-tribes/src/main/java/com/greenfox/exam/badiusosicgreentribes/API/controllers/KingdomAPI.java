@@ -5,63 +5,64 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/kingdoms")
 public class KingdomAPI {
 
-    @GetMapping("/kingdoms")
+    @GetMapping("")
     public ResponseEntity<?> getKingdoms() {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/kingdoms/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getKingdom(@PathVariable Long id) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/kingdoms/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateKingdom(@PathVariable Long id, @RequestBody UpdateKingdomRequest request) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/kingdoms/{id}/resources")
+    @GetMapping("/{id}/resources")
     public ResponseEntity<?> getResources(@PathVariable Long id) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/kingdoms/{id}/buildings")
+    @GetMapping("/{id}/buildings")
     public ResponseEntity<?> getBuildings(@PathVariable Long id) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/kingdoms/{id}/buildings")
+    @PostMapping("/{id}/buildings")
     public ResponseEntity<?> addBuilding(@PathVariable Long id, @RequestBody AddBuildingRequest request) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/kingdoms/{id1}/buildings/{id2}")
+    @PutMapping("/{id1}/buildings/{id2}")
     public ResponseEntity<?> upgradeBuilding(@PathVariable Long id1, @PathVariable Long id2, @RequestBody UpgradeBuildingRequest request) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/kingdoms/{id}/troops")
+    @GetMapping("/{id}/troops")
     public ResponseEntity<?> getTroops(@PathVariable Long id) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/kingdoms/{id}/troops")
+    @PostMapping("/{id}/troops")
     public ResponseEntity<?> addTroops(@PathVariable Long id, @RequestBody AddTroopsRequest request) {
         //TODO
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/kingdoms/{id}/troops")
+    @PutMapping("/{id}/troops")
     public ResponseEntity<?> upgradeTroops(@PathVariable Long id, @RequestBody UpgradeTroopsRequest request) {
         //TODO
         return ResponseEntity.ok().build();
