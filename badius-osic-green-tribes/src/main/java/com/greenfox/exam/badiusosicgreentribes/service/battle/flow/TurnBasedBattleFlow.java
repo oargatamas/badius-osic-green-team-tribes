@@ -6,6 +6,7 @@ import com.greenfox.exam.badiusosicgreentribes.model.battle.*;
 import com.greenfox.exam.badiusosicgreentribes.service.TransactionService;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.BattleFlow;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.calculator.DamageCalculator;
+import com.greenfox.exam.badiusosicgreentribes.service.kingdom.KingdomService;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.util.ArrayList;
@@ -15,14 +16,14 @@ import java.util.List;
 public class TurnBasedBattleFlow implements BattleFlow {
     private TransactionService transactionService;
     private BeanFactory beanFactory;
-   // private KingdomService kingdomService;
+    private KingdomService kingdomService;
 
     private Troop attacker;
     private Troop defender;
-    public TurnBasedBattleFlow(TransactionService transactionService, BeanFactory beanFactory /* , KingdomService kingdomService*/) {
+    public TurnBasedBattleFlow(TransactionService transactionService, BeanFactory beanFactory , KingdomService kingdomService) {
         this.transactionService = transactionService;
         this.beanFactory = beanFactory;
-      //  this.kingdomService = kingdomService;
+        this.kingdomService = kingdomService;
     }
 
     @Override

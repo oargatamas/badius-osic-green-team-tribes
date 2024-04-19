@@ -57,6 +57,11 @@ public class KingdomService implements KingdomOperations, BuildingOperations, Ar
     }
 
     @Override
+    public void updateArmy(Army armyToUpdate) {
+        armyAdapter.updateArmy(armyToUpdate);
+    }
+
+    @Override
     public Transaction addBuilding(Kingdom kingdom, Building buildingToAdd) {
         return buildingAdapter.addBuilding(kingdom, buildingToAdd);
     }
