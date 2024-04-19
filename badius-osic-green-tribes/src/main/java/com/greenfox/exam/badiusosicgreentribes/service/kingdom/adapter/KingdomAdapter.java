@@ -3,6 +3,7 @@ package com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
+import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.MapArea;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
@@ -11,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class KingdomAdapter implements KingdomOperations {
     }
 
     @Override
-    public List<Kingdom> lisKingdoms(Map map) {
+    public List<Kingdom> lisKingdoms(MapArea map) {
         // TODO Implement method
         return null;
     }
