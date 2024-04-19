@@ -5,16 +5,15 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.BuildingRepository;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.BuildingOperations;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class BuildingAdapter implements BuildingOperations {
 
     BuildingRepository buildingRepository;
 
-    public BuildingAdapter(BuildingRepository buildingRepository) {
-        this.buildingRepository = buildingRepository;
-    }
 
     @Override
     public Transaction addBuilding(Kingdom kingdom, Building buildingToAdd) {

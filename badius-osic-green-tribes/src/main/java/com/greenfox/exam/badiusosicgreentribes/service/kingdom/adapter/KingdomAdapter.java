@@ -7,19 +7,18 @@ import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.KingdomOperations;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class KingdomAdapter implements KingdomOperations {
 
     KingdomRepository kingdomRepository;
 
-    public KingdomAdapter(KingdomRepository kingdomRepository) {
-        this.kingdomRepository = kingdomRepository;
-    }
 
     @Override
     public Kingdom getKingdom(Long id) {

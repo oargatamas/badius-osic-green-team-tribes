@@ -6,16 +6,14 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.TroopRepository;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.TroopOperations;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class TroopAdapter implements TroopOperations {
 
     TroopRepository troopRepository;
-
-    public TroopAdapter(TroopRepository troopRepository) {
-        this.troopRepository = troopRepository;
-    }
 
     @Override
     public Transaction trainUnits(Kingdom kingdom, UnitType unit, Integer quantity) {

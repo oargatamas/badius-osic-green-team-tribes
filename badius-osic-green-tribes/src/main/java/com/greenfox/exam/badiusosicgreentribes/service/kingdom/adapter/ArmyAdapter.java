@@ -4,18 +4,16 @@ import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.ArmyRepository;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.ArmyOperations;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class ArmyAdapter implements ArmyOperations {
 
     ArmyRepository armyRepository;
-
-    public ArmyAdapter(ArmyRepository armyRepository) {
-        this.armyRepository = armyRepository;
-    }
 
     @Override
     public List<Troop> splitTroop(Troop troop1, List<Integer> distribution) {
