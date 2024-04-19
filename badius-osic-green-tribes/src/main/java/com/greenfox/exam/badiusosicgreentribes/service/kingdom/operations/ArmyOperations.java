@@ -12,4 +12,5 @@ public interface ArmyOperations {
     Army splitArmy(Army fromArmy, Army desiredArmy);
     Army mergeArmy(Army targetArmy, List<Army> armiesToMerge);
     void removeArmy(Army armyToRemove);
+    void updateArmy(Army armyToUpdate);
 }

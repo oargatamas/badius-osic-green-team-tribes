@@ -43,4 +43,9 @@ public class ArmyAdapter implements ArmyOperations {
     public void removeArmy(Army armyToRemove) {
         // TODO Implement method
     }
+
+    @Override
+    public void updateArmy(Army armyToUpdate) {
+        // TODO Implement method
+    }
 }
