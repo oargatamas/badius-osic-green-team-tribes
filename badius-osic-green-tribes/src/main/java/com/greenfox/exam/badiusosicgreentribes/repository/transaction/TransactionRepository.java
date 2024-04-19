@@ -12,5 +12,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findTransactionsByStateIs(TransactionState state);
 
-    List<Transaction> findTransactionsById(Long trxId);
+    List<Transaction> findTransactionsByIdInAndState(List<Long> ids, TransactionState state);
 }

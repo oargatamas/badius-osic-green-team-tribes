@@ -6,13 +6,16 @@ import com.greenfox.exam.badiusosicgreentribes.repository.transaction.Transactio
 import com.greenfox.exam.badiusosicgreentribes.transaction.TransactionHandlerFactory;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.TransactionHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
 
@@ -27,6 +30,7 @@ public class TransactionService {
     public void checkTransactions() {
         List<Transaction> transactions = repository.findTransactionsByStateIs(TransactionState.SCHEDULED);
         List<Transaction> expiredTransactions = filterExpiredTransactions(transactions);
+
         expiredTransactions.forEach(transaction -> {
             TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
             try {
@@ -56,33 +60,18 @@ public class TransactionService {
         //All the cancelled transactions need to be refunded on the kingdom. This refund logic may vary
         //based on the transaction type, therefore the related TransactionHandler.refund(trx : Trx) : void need to be called.
 
-        List<Transaction> transactions = trxIds.stream()
-                        .map(trxId -> repository.findTransactionsById(trxId))
-                        .flatMap(List::stream)
-                        .toList();
-
-        List<Transaction> scheduledTransactions = transactions.stream()
-                .filter(this::isTransactionScheduled)
-                .toList();
+        List<Transaction> scheduledTransactions = repository.findTransactionsByIdInAndState(trxIds, TransactionState.SCHEDULED);
 
         scheduledTransactions.forEach(transaction -> {
             try {
                 transaction.setState(TransactionState.CANCELLED);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            repository.save(transaction);
-            TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
-            try {
+                repository.save(transaction);
+
+                TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
                 handler.refund(transaction);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                log.error(MessageFormat.format("Transaction cancellation failed on {0}", transaction.getId()), e);
             }
         });
-    }
-
-    private boolean isTransactionScheduled(Transaction transaction) {
-        TransactionState state = TransactionState.SCHEDULED;
-        return transaction.getState().equals(state);
     }
 }
