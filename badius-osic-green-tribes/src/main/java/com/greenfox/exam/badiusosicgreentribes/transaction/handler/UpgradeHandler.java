@@ -15,4 +15,9 @@ public class UpgradeHandler implements TransactionHandler<Upgrade> {
     public void confirm(Upgrade transaction) {
         // Todo implement method
     }
+
+    @Override
+    public void refund(Upgrade transaction) {
+        // Todo implement method
+    }
 }

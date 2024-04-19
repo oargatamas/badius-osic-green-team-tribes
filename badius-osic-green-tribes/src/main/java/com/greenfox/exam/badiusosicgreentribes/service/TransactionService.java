@@ -50,4 +50,39 @@ public class TransactionService {
         LocalDateTime expirationTime = startedAt.plusSeconds(durationInSeconds);
         return expirationTime.isBefore(currentTime);
     }
+
+    public void cancelTransactions(List<Long> trxIds) {
+        //The desired functionality is to change the state of the input ids to CANCELLED if possible (State not in FAILED or COMPLETED).
+        //All the cancelled transactions need to be refunded on the kingdom. This refund logic may vary
+        //based on the transaction type, therefore the related TransactionHandler.refund(trx : Trx) : void need to be called.
+
+        List<Transaction> transactions = trxIds.stream()
+                        .map(trxId -> repository.findTransactionsById(trxId))
+                        .flatMap(List::stream)
+                        .toList();
+
+        List<Transaction> scheduledTransactions = transactions.stream()
+                .filter(this::isTransactionScheduled)
+                .toList();
+
+        scheduledTransactions.forEach(transaction -> {
+            try {
+                transaction.setState(TransactionState.CANCELLED);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            repository.save(transaction);
+            TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
+            try {
+                handler.refund(transaction);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        });
+    }
+
+    private boolean isTransactionScheduled(Transaction transaction) {
+        TransactionState state = TransactionState.SCHEDULED;
+        return transaction.getState().equals(state);
+    }
 }
