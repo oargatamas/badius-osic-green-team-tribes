@@ -59,10 +59,13 @@ public class TurnBasedBattleFlow implements BattleFlow {
         BattleResult attackerResult;
         BattleResult defenderResult;
         if(attackerArmy.getTroops().stream().allMatch(t -> t.getQuantity() < 1)){
-            attackerResult = BattleResult.builder().didItWin(false).build(); //todo implement method
+            attackerResult = BattleResult.builder().didItWin(false).build();
             defenderResult = BattleResult.builder().didItWin(true).build();
-        }else {
+        }else if(defenderArmy.getTroops().stream().allMatch(t -> t.getQuantity() < 1)){
             attackerResult = BattleResult.builder().didItWin(true).build();
+            defenderResult = BattleResult.builder().didItWin(false).build();
+        }else {
+            attackerResult = BattleResult.builder().didItWin(false).build();
             defenderResult = BattleResult.builder().didItWin(false).build();
         }
         return new BattleLog(props, turns, attackerResult, defenderResult);
@@ -73,7 +76,8 @@ public class TurnBasedBattleFlow implements BattleFlow {
 
     }
     private void applyDamage(Damage damage, Troop attacker, Troop defender){
-
+        defender.getStats().setHealth(defender.getStats().getHealth() - damage.getDamage());
+        defender.setQuantity(defender.getQuantity() - damage.getNoDeadUnits());
     }
     private void chooseAttackerDefender(Troop troop1, Troop troop2){
         int sp1 = (int)(Math.random() * 100 + 1 + troop1.getStats().getSpeed());
