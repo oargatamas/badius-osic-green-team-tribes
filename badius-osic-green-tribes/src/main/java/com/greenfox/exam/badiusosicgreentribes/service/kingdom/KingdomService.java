@@ -16,11 +16,13 @@ import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.ArmyOp
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.BuildingOperations;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.KingdomOperations;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.TroopOperations;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @Service
 public class KingdomService implements KingdomOperations, BuildingOperations, ArmyOperations, TroopOperations {
 
@@ -29,91 +31,83 @@ public class KingdomService implements KingdomOperations, BuildingOperations, Ar
     ArmyAdapter armyAdapter;
     TroopAdapter troopAdapter;
 
-
-    public KingdomService(KingdomAdapter kingdomAdapter, BuildingAdapter buildingAdapter, ArmyAdapter armyAdapter, TroopAdapter troopAdapter) {
-        this.kingdomAdapter = kingdomAdapter;
-        this.buildingAdapter = buildingAdapter;
-        this.armyAdapter = armyAdapter;
-        this.troopAdapter = troopAdapter;
-    }
-
     @Override
     public List<Troop> splitTroop(Troop troop1, List<Integer> distribution) {
-        return null;
+        return armyAdapter.splitTroop(troop1, distribution);
     }
 
     @Override
     public Troop mergeTroop(Troop troop1, Troop troop2) {
-        return null;
+        return armyAdapter.mergeTroop(troop1, troop2);
     }
 
     @Override
     public Army splitArmy(Army fromArmy, Army desiredArmy) {
-        return null;
+        return armyAdapter.splitArmy(fromArmy, desiredArmy);
     }
 
     @Override
     public Army mergeArmy(Army targetArmy, List<Army> armiesToMerge) {
-        return null;
+        return armyAdapter.mergeArmy(targetArmy, armiesToMerge);
     }
 
     @Override
     public void removeArmy(Army armyToRemove) {
-
+        armyAdapter.removeArmy(armyToRemove);
     }
 
     @Override
     public Transaction addBuilding(Kingdom kingdom, Building buildingToAdd) {
-        return null;
+        return buildingAdapter.addBuilding(kingdom, buildingToAdd);
     }
 
     @Override
     public void destroyBuilding(Kingdom kingdom, Building buildingToDestroy) {
-
+        buildingAdapter.destroyBuilding(kingdom, buildingToDestroy);
     }
 
     @Override
     public Transaction upgradeBuilding(Kingdom kingdom, Building buildingToUpgrade) {
-        return null;
+        return buildingAdapter.upgradeBuilding(kingdom, buildingToUpgrade);
     }
 
     @Override
     public Kingdom getKingdom(Long id) {
-        return null;
+        return kingdomAdapter.getKingdom(id);
     }
 
     @Override
     public List<Kingdom> lisKingdoms(Map map) {
-        return null;
+        return kingdomAdapter.lisKingdoms(map);
     }
 
     @Override
     public Kingdom placeKingdom(User user, String name) {
-        return null;
+        return kingdomAdapter.placeKingdom(user, name);
     }
 
     @Override
     public void removeKingdom(Long id) {
-
+        kingdomAdapter.removeKingdom(id);
     }
 
     @Override
     public void updateTreasury(Kingdom kingdom, Production transaction) {
-
+        kingdomAdapter.updateTreasury(kingdom, transaction);
     }
 
     @Override
     public Transaction attackKingdom(Army attacker, Kingdom target) {
-        return null;
+        return kingdomAdapter.attackKingdom(attacker, target);
     }
 
     @Override
     public Transaction trainUnits(Kingdom kingdom, UnitType unit, Integer quantity) {
-        return null;
+        return troopAdapter.trainUnits(kingdom, unit, quantity);
     }
 
     @Override
     public Transaction promoteTroop(Kingdom kingdom, Troop troopToUpgrade) {
-        return null;
+        return troopAdapter.promoteTroop(kingdom, troopToUpgrade);
     }
 }
