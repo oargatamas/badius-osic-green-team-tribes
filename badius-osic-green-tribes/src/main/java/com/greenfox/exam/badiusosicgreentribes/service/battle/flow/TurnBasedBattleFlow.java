@@ -34,18 +34,18 @@ public class TurnBasedBattleFlow implements BattleFlow {
 
         Army attackerArmy = props.getAttackerArmy();
         Army defenderArmy = props.getDefenderArmy();
-
+        TurnParticipants turnParticipants;
         Troop attacker;
         Troop defender;
 
         List<BattleTurn> turns = new ArrayList<>();
 
-        //Todo rephrase to work until any of the army is depleted
-        while (!isArmyDepleted(attackerArmy) || !isArmyDepleted(defenderArmy)) {
-            attacker = selector.getAttacker(attackerArmy);
-            defender = selector.getDefender(defenderArmy);
+        while (!isArmyDepleted(attackerArmy) && !isArmyDepleted(defenderArmy)) {
 
-            //Todo calc speed and switch attck/def if needed
+
+            turnParticipants = selector.getAttackerDefender(attackerArmy, defenderArmy);
+            attacker = turnParticipants.getAttacker();
+            defender = turnParticipants.getDefender();
 
             Damage firstHit = damageCalculator.calcDamage(attacker, defender);
             applyDamage(firstHit, defender);
