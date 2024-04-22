@@ -138,12 +138,11 @@ class TransactionServiceTest {
 
     @Test
     void cancelTransactions_AllScheduled() {
-//Todo refactor test case based on cancelTransactions_FailedCancellation()
         List<Long> trxIds = List.of(1L, 2L, 3L);
         List<Transaction> scheduledTransactions = List.of(
-                getScheduledMovement(),
-                getScheduledUpgrade(),
-                getScheduledProduction()
+                scheduledMovement,
+                scheduledUpgrade,
+                scheduledProduction
         );
         when(repository.findTransactionsByIdInAndState(trxIds, TransactionState.SCHEDULED)).thenReturn(scheduledTransactions);
 
@@ -152,8 +151,14 @@ class TransactionServiceTest {
         for (Transaction transaction : scheduledTransactions) {
             assertEquals(TransactionState.CANCELLED, transaction.getState());
         }
-        verify(repository, times(scheduledTransactions.size())).save(any());
-        verify(handlerFactory, times(scheduledTransactions.size())).getHandler(any());
+
+        verify(handlerFactory, times(1)).getHandler(TransactionType.PRODUCTION);
+        verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
+        verify(handlerFactory, times(1)).getHandler(TransactionType.UPGRADE);
+        verify(movementHandler, times(1)).refund(scheduledMovement);
+        verify(upgradeHandler, times(1)).refund(scheduledUpgrade);
+        verify(productionHandler, times(1)).refund(scheduledProduction);
+        verify(repository, times(3)).save(any());
     }
 
     @Test
