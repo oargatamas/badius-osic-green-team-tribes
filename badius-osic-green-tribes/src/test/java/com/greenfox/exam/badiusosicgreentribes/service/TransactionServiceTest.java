@@ -143,6 +143,57 @@ class TransactionServiceTest {
         verify(repository, times(3)).save(any());
     }
 
+    @Test
+    void cancelTransactions_AllScheduled() {
+
+        List<Long> trxIds = List.of(1L, 2L, 3L);
+        List<Transaction> scheduledTransactions = List.of(
+                getScheduledMovement(),
+                getScheduledUpgrade(),
+                getScheduledProduction()
+        );
+        when(repository.findTransactionsByIdInAndState(trxIds, TransactionState.SCHEDULED)).thenReturn(scheduledTransactions);
+
+        transactionService.cancelTransactions(trxIds);
+
+        for (Transaction transaction : scheduledTransactions) {
+            assertEquals(TransactionState.CANCELLED, transaction.getState());
+        }
+        verify(repository, times(scheduledTransactions.size())).save(any());
+        verify(handlerFactory, times(scheduledTransactions.size())).getHandler(any());
+    }
+
+    @Test
+    void cancelTransactions_FailedCancellation() {
+        List<Long> trxIds = List.of(1L, 2L, 3L);
+        List<Transaction> scheduledTransactions = List.of(
+                getScheduledMovement(),
+                getScheduledUpgrade(),
+                getScheduledProduction()
+        );
+        when(repository.findTransactionsByIdInAndState(trxIds, TransactionState.SCHEDULED)).thenReturn(scheduledTransactions);
+
+        doThrow(RuntimeException.class).when(movementHandler).refund(any());
+
+        transactionService.cancelTransactions(trxIds);
+
+        for (Transaction transaction : scheduledTransactions) {
+            if (transaction.getTransactionType() == TransactionType.MOVEMENT) {
+                assertEquals(TransactionState.CANCELLED, transaction.getState());
+                assertThrows(RuntimeException.class, () -> movementHandler.refund((Movement) transaction));
+                verify(movementHandler, times(2)).refund((Movement) transaction);
+            } else if (transaction.getTransactionType() == TransactionType.UPGRADE) {
+                assertEquals(TransactionState.CANCELLED, transaction.getState());
+                verify(handlerFactory, times(1)).getHandler(transaction.getTransactionType());
+                verify(upgradeHandler, times(1)).refund((Upgrade) transaction);
+            } else {
+                assertEquals(TransactionState.CANCELLED, transaction.getState());
+                verify(handlerFactory, times(1)).getHandler(transaction.getTransactionType());
+                verify(productionHandler, times(1)).refund((Production) transaction);
+            }
+        }
+        verify(repository, times(scheduledTransactions.size())).save(any());
+    }
 
     private Movement getScheduledMovement() {
         return Movement.builder()
