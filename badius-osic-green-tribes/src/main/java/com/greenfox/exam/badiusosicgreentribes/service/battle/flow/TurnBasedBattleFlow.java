@@ -71,6 +71,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
         }
 
         return BattleLog.builder()
+                .properties(BattleProperties.builder().attackerArmy(attackerArmy).defenderArmy(defenderArmy).build())
                 .turns(turns)
                 .attackerResult(BattleResult.builder()
                         .didItWin(isArmyDepleted(attackerArmy))
@@ -83,6 +84,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
 
     @Override
     public void finalize(BattleLog log) {
+
     }
 
     private void applyDamage(Damage damage, Troop troop) {
