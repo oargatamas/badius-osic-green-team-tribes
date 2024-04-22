@@ -4,113 +4,84 @@ import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Unit;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitStats;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.Damage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
-@ExtendWith(MockitoExtension.class)
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class DamageCalculatorTest {
-    @Mock
-    Troop attackerTroop, defenderTroop;
-    @Mock
-    Unit attackerUnit, defenderUnit;
-    @Mock
-    UnitStats attackerStats, defenderStats, defenderTroopStats;
-    @InjectMocks
+
     DamageCalculator calculator;
 
-    @BeforeEach
-    public void setUp() {
+    @ParameterizedTest
+    @ArgumentsSource(DamageCalcTestData.class)
+    public void testCalcDamage(
+            Integer attackerQuantity,
+            Integer attackPerUnit,
+            Integer defenderQuantity,
+            Integer defensePerUnit,
+            Integer defenderTroopHealth,
+            Integer defenderUnitHealth,
+            Integer expectedDamage,
+            Integer expectedNoDeadUnits,
+            Integer expectedNoDeadTroops,
+            Float expectedChanceToRepost
+    ) {
 
-        when(attackerTroop.getUnit()).thenReturn(attackerUnit);
-        when(defenderTroop.getUnit()).thenReturn(defenderUnit);
-        when(attackerUnit.getStats()).thenReturn(attackerStats);
-        when(defenderUnit.getStats()).thenReturn(defenderStats);
+        Troop attackerTroop = Troop.builder()
+                .quantity(attackerQuantity)
+                .unit(Unit.builder()
+                        .stats(UnitStats.builder()
+                                .attack(attackPerUnit)
+                                .build())
+                        .build())
+                .build();
 
-        when(attackerStats.getAttack()).thenReturn(30);
-        when(defenderStats.getDefense()).thenReturn(20);
-        when(defenderUnit.getStats().getHealth()).thenReturn(100);
-
-        when(defenderTroop.getStats()).thenReturn(defenderTroopStats);
-        when(defenderTroopStats.getHealth()).thenReturn(500);
-
-        when(attackerTroop.getQuantity()).thenReturn(10);
-        lenient().when(defenderTroop.getQuantity()).thenReturn(5);
-    }
-
-
-
-    @Test
-    public void testCalcDamage_StandardCase() {
-        Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
-
-        assertEquals(0, result.getDamage());
-        assertEquals(1, result.getNoDeadUnits());
-        assertEquals(0, result.getNoDeadTroops());
-    }
-
-    @Test
-    public void testCalcDamage_AllDefendersDie() {
-
-        when(attackerStats.getAttack()).thenReturn(100);
-
-        Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
-
-        assertEquals(0, result.getDamage());
-        assertEquals(5, result.getNoDeadUnits());
-        assertEquals(1, result.getNoDeadTroops());
-    }
-
-    @Test
-    public void testCalcDamage_PartialDamageNoDeaths() {
-
-        when(attackerStats.getAttack()).thenReturn(25);
+        Troop defenderTroop = Troop.builder()
+                .quantity(defenderQuantity)
+                .stats(UnitStats.builder()
+                        .health(defenderTroopHealth)
+                        .build())
+                .unit(Unit.builder()
+                        .stats(UnitStats.builder()
+                                .defense(defensePerUnit)
+                                .health(defenderUnitHealth)
+                                .build())
+                        .build())
+                .build();
 
         Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
 
-        assertEquals(50, result.getDamage());
-        assertEquals(0, result.getNoDeadUnits());
-        assertEquals(0, result.getNoDeadTroops());
+        assertEquals(expectedDamage, result.getDamage());
+        assertEquals(expectedNoDeadUnits, result.getNoDeadUnits());
+        assertEquals(expectedNoDeadTroops, result.getNoDeadTroops());
+        assertEquals(expectedChanceToRepost, result.getChanceToRepost());
     }
 
-    @Test
-    public void testCalcDamage_LowDamageBlockedByDefense() {
+    public static class DamageCalcTestData implements ArgumentsProvider{
 
-        when(attackerStats.getAttack()).thenReturn(15);
-
-        Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
-
-        assertEquals(0, result.getDamage());
-        assertEquals(0, result.getNoDeadUnits());
-        assertEquals(0, result.getNoDeadTroops());
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
+            return Stream.of(
+                   Arguments.of(
+                           1, //attackerQuantity
+                           1, //attackPerUnit
+                           1, //defenderQuantity
+                           1, //defensePerUnit
+                           1, //defenderTroopHealth
+                           1, //defenderUnitHealth
+                           0, //expectedDamage
+                           0, //expectedNoDeadUnits
+                           0, //expectedNoDeadTroops
+                           0f //expectedChanceToRepost
+                   )
+            );
+        }
     }
 
-    @Test
-    public void testCalcDamage_SameDamageAndDefenseValues() {
-
-        when(attackerStats.getAttack()).thenReturn(20);
-
-        Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
-
-        assertEquals(0, result.getDamage());
-        assertEquals(0, result.getNoDeadUnits());
-        assertEquals(0, result.getNoDeadTroops());
-    }
-
-    @Test
-    public void testCalcDamage_ExactDamageNeededToKillTroop() {
-
-        when(attackerStats.getAttack()).thenReturn(70);
-
-        Damage result = calculator.calcDamage(attackerTroop, defenderTroop);
-
-        assertEquals(0, result.getDamage());
-        assertEquals(5, result.getNoDeadUnits());
-        assertEquals(1, result.getNoDeadTroops());
-    }
 }
