@@ -16,7 +16,7 @@ public class DamageCalculator {
 
         Integer completeDamage = damageRatePerUnit * attacker.getQuantity(); //the total damage of the combined units in the troop object after defense point deductions have been applied
 
-        Integer noDeadUnits = Math.min(completeDamage / healthPerUnit, defender.getQuantity()); //the number of dead units
+        Integer noDeadUnits = Math.min(completeDamage / (healthPerUnit > 0 ? healthPerUnit : 1), defender.getQuantity()); //the number of dead units
         Integer deadUnitsHealth = noDeadUnits * healthPerUnit; //the combined health of all the dead units
 
         Integer remainingDamage = noDeadUnits.equals(defender.getQuantity()) ? 0 : completeDamage - deadUnitsHealth; //the leftover damage that wasn't yet used to kill a unit
