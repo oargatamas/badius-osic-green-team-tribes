@@ -48,9 +48,10 @@ public class TurnBasedBattleFlow implements BattleFlow {
             defender = turnParticipants.getDefender();
 
             Damage firstHit = damageCalculator.calcDamage(attacker, defender);
+            Damage repost = Damage.builder().damage(0).build();
             applyDamage(firstHit, defender);
             if (firstHit.getChanceToRepost() > 50 && defender.getQuantity() > 0) {
-                Damage repost = damageCalculator.calcDamage(defender, attacker);
+                repost = damageCalculator.calcDamage(defender, attacker);
                 applyDamage(repost, attacker);
             }
 
@@ -65,7 +66,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
                             .quantity(defender.getQuantity())
                             .health(defenderArmy.getStats().getHealth())
                             .build())
-                    .result("") // Todo implement a pretty print data. e.g.: "Unicors hit with 23 313. 34 vampires perished"
+                    .result(attacker.getUnit().getName() + " hit " + defender.getUnit().getName() + " for " + firstHit.getDamage() + " damage. " + attacker.getUnit().getName() + " was hit for " + repost.getDamage()) // Todo implement a pretty print data. e.g.: "Unicors hit with 23 313. 34 vampires perished"
                     .build());
         }
 
@@ -82,7 +83,6 @@ public class TurnBasedBattleFlow implements BattleFlow {
 
     @Override
     public void finalize(BattleLog log) {
-
     }
 
     private void applyDamage(Damage damage, Troop troop) {
