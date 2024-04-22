@@ -64,11 +64,11 @@ public class TransactionService {
 
         scheduledTransactions.forEach(transaction -> {
             try {
-                transaction.setState(TransactionState.CANCELLED);
-                repository.save(transaction);
-
                 TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
                 handler.refund(transaction);
+
+                transaction.setState(TransactionState.CANCELLED);
+                repository.save(transaction);
             } catch (Exception e) {
                 log.error(MessageFormat.format("Transaction cancellation failed on {0}", transaction.getId()), e);
             }

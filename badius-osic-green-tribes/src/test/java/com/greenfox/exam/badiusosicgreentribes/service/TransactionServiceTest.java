@@ -1,12 +1,10 @@
 package com.greenfox.exam.badiusosicgreentribes.service;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.*;
-import com.greenfox.exam.badiusosicgreentribes.repository.transaction.MovementRepository;
 import com.greenfox.exam.badiusosicgreentribes.repository.transaction.TransactionRepository;
 import com.greenfox.exam.badiusosicgreentribes.transaction.TransactionHandlerFactory;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.MovementHandler;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.ProductionHandler;
-import com.greenfox.exam.badiusosicgreentribes.transaction.handler.TransactionHandler;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.UpgradeHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,16 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -50,10 +43,10 @@ class TransactionServiceTest {
 
     Movement scheduledMovement;
     Movement expiredMovement;
-    Transaction scheduledUpgrade;
-    Transaction expiredUpgrade;
-    Transaction scheduledProduction;
-    Transaction expiredProduction;
+    Upgrade scheduledUpgrade;
+    Upgrade expiredUpgrade;
+    Production scheduledProduction;
+    Production expiredProduction;
 
     public static final int DURATION = 60000;
     public static final LocalDateTime EXPIRED_CREATED_AT = LocalDateTime.now().minusSeconds(DURATION);
@@ -145,7 +138,7 @@ class TransactionServiceTest {
 
     @Test
     void cancelTransactions_AllScheduled() {
-
+//Todo refactor test case based on cancelTransactions_FailedCancellation()
         List<Long> trxIds = List.of(1L, 2L, 3L);
         List<Transaction> scheduledTransactions = List.of(
                 getScheduledMovement(),
@@ -167,9 +160,9 @@ class TransactionServiceTest {
     void cancelTransactions_FailedCancellation() {
         List<Long> trxIds = List.of(1L, 2L, 3L);
         List<Transaction> scheduledTransactions = List.of(
-                getScheduledMovement(),
-                getScheduledUpgrade(),
-                getScheduledProduction()
+                scheduledMovement,
+                scheduledUpgrade,
+                scheduledProduction
         );
         when(repository.findTransactionsByIdInAndState(trxIds, TransactionState.SCHEDULED)).thenReturn(scheduledTransactions);
 
@@ -177,22 +170,16 @@ class TransactionServiceTest {
 
         transactionService.cancelTransactions(trxIds);
 
-        for (Transaction transaction : scheduledTransactions) {
-            if (transaction.getTransactionType() == TransactionType.MOVEMENT) {
-                assertEquals(TransactionState.CANCELLED, transaction.getState());
-                assertThrows(RuntimeException.class, () -> movementHandler.refund((Movement) transaction));
-                verify(movementHandler, times(2)).refund((Movement) transaction);
-            } else if (transaction.getTransactionType() == TransactionType.UPGRADE) {
-                assertEquals(TransactionState.CANCELLED, transaction.getState());
-                verify(handlerFactory, times(1)).getHandler(transaction.getTransactionType());
-                verify(upgradeHandler, times(1)).refund((Upgrade) transaction);
-            } else {
-                assertEquals(TransactionState.CANCELLED, transaction.getState());
-                verify(handlerFactory, times(1)).getHandler(transaction.getTransactionType());
-                verify(productionHandler, times(1)).refund((Production) transaction);
-            }
-        }
-        verify(repository, times(scheduledTransactions.size())).save(any());
+        assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
+        assertEquals(TransactionState.CANCELLED, scheduledProduction.getState());
+        assertEquals(TransactionState.CANCELLED, scheduledUpgrade.getState());
+        verify(handlerFactory, times(1)).getHandler(TransactionType.PRODUCTION);
+        verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
+        verify(handlerFactory, times(1)).getHandler(TransactionType.UPGRADE);
+        verify(movementHandler, times(1)).refund(scheduledMovement);
+        verify(upgradeHandler, times(1)).refund(scheduledUpgrade);
+        verify(productionHandler, times(1)).refund(scheduledProduction);
+        verify(repository, times(2)).save(any());
     }
 
     private Movement getScheduledMovement() {
