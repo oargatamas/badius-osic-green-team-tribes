@@ -6,18 +6,13 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Storage;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Movement;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleLog;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleProperties;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.print.attribute.standard.Destination;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
