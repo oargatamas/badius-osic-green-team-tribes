@@ -64,7 +64,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
                     .defender(TroopInfo.builder()
                             .unit(defender.getUnit().toString())
                             .quantity(defender.getQuantity())
-                            .health(defenderArmy.getStats().getHealth())
+                            .health(defender.getStats().getHealth())
                             .build())
                     .result(attacker.getUnit().getName() + " hit " + defender.getUnit().getName() + " for " + firstHit.getDamage() + " damage. " + attacker.getUnit().getName() + " was hit for " + repost.getDamage()) // Todo implement a pretty print data. e.g.: "Unicors hit with 23 313. 34 vampires perished"
                     .build());
