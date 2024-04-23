@@ -7,7 +7,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -26,5 +25,5 @@ public class Movement extends Transaction {
     private Kingdom destination;
     @OneToOne
     private Army army;
-    private boolean refundable;
+    private Boolean refundable; //Todo set default value on the JPA side
 }

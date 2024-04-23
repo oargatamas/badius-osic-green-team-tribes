@@ -19,27 +19,20 @@ public class MovementHandler implements TransactionHandler<Movement> {
     BattleService battleService;
     TransactionHandlerFactory handlerFactory;
 
-    public MovementHandler(MovementRepository movementRepository, BattleService battleService, TransactionHandlerFactory handlerFactory) {
-        this.movementRepository = movementRepository;
-        this.battleService = battleService;
-        this.handlerFactory = handlerFactory;
-    }
-
     @Override
     public void confirm(Movement transaction) {
-
-        if (isTransactionExpired(transaction.getStartAt(), transaction.getDuration(), LocalDateTime.now())) {
-            if (!transaction.getOrigin().getOwner().equals(transaction.getDestination().getOwner())) {
-                battleService.startBattle(transaction);
-            } else {
-                transaction.getDestination().getStorage().add(transaction.getArmy());
-            }
+        if (!transaction.getOrigin().getOwner().equals(transaction.getDestination().getOwner())) {
+            battleService.startBattle(transaction);
+        } else {
+            //Todo remove army from the origin kingdom's storage
+            transaction.getDestination().getStorage().add(transaction.getArmy());
+            //Todo call save on Kingdom repositories
         }
     }
 
     @Override
     public void refund(Movement transaction) {
-        if (transaction.isRefundable()) {
+        if (transaction.getRefundable()) {
             Movement refundMovement = Movement.builder()
                     .transactionType(TransactionType.MOVEMENT)
                     .state(TransactionState.SCHEDULED)
@@ -48,13 +41,16 @@ public class MovementHandler implements TransactionHandler<Movement> {
                     .destination(transaction.getOrigin())
                     .army(transaction.getArmy())
                     .build();
+
+            //Todo remove and do not confirm the transaction here. Instead call the repository save on the refundMovement!!!
             TransactionHandler refundHandler = handlerFactory.getHandler(refundMovement.getTransactionType());
             refundHandler.confirm(refundMovement);
         } else {
-            throw new RuntimeException("This Movement transaction is not refundable");
+            throw new RuntimeException("This Movement transaction is not refundable"); // Todo create and throw customException here (e.g.: TransactionRefundNotAllowed )
         }
     }
 
+    //Todo remove this method as it is not in use
     private boolean isTransactionExpired(LocalDateTime startedAt, Integer durationInSeconds, LocalDateTime currentTime) {
         LocalDateTime expirationTime = startedAt.plusSeconds(durationInSeconds);
         return expirationTime.isBefore(currentTime);
