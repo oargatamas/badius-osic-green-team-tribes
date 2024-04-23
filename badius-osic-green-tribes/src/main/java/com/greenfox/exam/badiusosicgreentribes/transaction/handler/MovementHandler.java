@@ -14,4 +14,9 @@ public class MovementHandler implements TransactionHandler<Movement> {
     public void confirm(Movement transaction) {
         // Todo implement method
     }
+
+    @Override
+    public void refund(Movement transaction) {
+        // Todo implement method
+    }
 }
