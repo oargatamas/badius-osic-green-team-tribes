@@ -9,8 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BattleProperties {
-    private Army attackerArmy;
-    private Army defenderArmy;
+    private Army attackerArmy; //Todo replicate the Army into the model package (only Id, Name should be fine)
+    private Army defenderArmy; //Todo replicate the Army into the model package (only Id, Name should be fine)
 
 
 }

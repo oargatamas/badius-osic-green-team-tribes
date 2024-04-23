@@ -50,7 +50,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
             Damage firstHit = damageCalculator.calcDamage(attacker, defender);
             Damage repost = Damage.builder().damage(0).build();
             applyDamage(firstHit, defender);
-            if (firstHit.getChanceToRepost() > 50F && defender.getQuantity() > 0) {
+            if (firstHit.getChanceToRepost() > 0.5f && defender.getQuantity() > 0) {
                 repost = damageCalculator.calcDamage(defender, attacker);
                 applyDamage(repost, attacker);
             }

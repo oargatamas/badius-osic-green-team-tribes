@@ -1,35 +1,32 @@
 package com.greenfox.exam.badiusosicgreentribes.battle;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Unit;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitStats;
-import com.greenfox.exam.badiusosicgreentribes.model.battle.*;
+import com.greenfox.exam.badiusosicgreentribes.data.battle.BattleScenarios;
+import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleLog;
+import com.greenfox.exam.badiusosicgreentribes.model.battle.Damage;
+import com.greenfox.exam.badiusosicgreentribes.model.battle.TurnParticipants;
 import com.greenfox.exam.badiusosicgreentribes.service.TransactionService;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.TurnSelector;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.calculator.DamageCalculator;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.flow.TurnBasedBattleFlow;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.KingdomService;
-import org.hibernate.mapping.Any;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.BeanFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doReturn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class TurnBasedBattleFlowTest {
     @Mock
@@ -44,61 +41,75 @@ class TurnBasedBattleFlowTest {
     private DamageCalculator damageCalculator;
     @InjectMocks
     private TurnBasedBattleFlow turnBasedBattleFlow;
-    UnitStats stats;
-    List<Troop> list;
-    Army attackerArmy;
-    Army defenderArmy;
-    BattleProperties props;
-    List<BattleTurn> turns;
-    @BeforeEach
-    public void initMocks(){
-        stats = UnitStats.builder().speed(10).attack(13).defense(3).health(20).aggressivity(1F).build();
-        list = new ArrayList<>(Arrays.asList(
-                Troop.builder().quantity(4).unit(Unit.builder().name("test").build()).stats(stats).build()));
-        attackerArmy = Army.builder().name("attacker army").troops(list).build();
-        defenderArmy = Army.builder().name("defender army").troops(list).build();
-
-        props = BattleProperties.builder().attackerArmy(attackerArmy).defenderArmy(defenderArmy).build();
-        turns = new ArrayList<>(Arrays.asList(
-                BattleTurn.builder()
-                        .attacker(TroopInfo.builder().unit("test").quantity(4).health(20).build())
-                        .defender(TroopInfo.builder().unit("test").quantity(2).health(10).build())
-                        .result("test hit test for 10 damage. test was hit for 0").build(),
-                BattleTurn.builder()
-                        .attacker(TroopInfo.builder().unit("test").quantity(4).health(20).build())
-                        .defender(TroopInfo.builder().unit("test").quantity(0).health(0).build())
-                        .result("test hit test for 10 damage. test was hit for 0").build()
-                ));
-
-        when(damageCalculator.calcDamage(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(Damage.builder().damage(10)
-                        .chanceToRepost(1F)
-                        .NoDeadTroops(0)
-                        .NoDeadUnits(2)
-                        .build());
-        when(selector.getAttackerDefender(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(TurnParticipants.builder()
-                        .attacker(attackerArmy.getTroops().getFirst())
-                        .defender(defenderArmy.getTroops().getFirst())
-                        .build());
-    }
 
     @Test
     void prepare() {
 
     }
 
-    @Test
-    void battle() {
-        BattleLog log = BattleLog.builder().properties(props)
-                .attackerResult(BattleResult.builder().didItWin(true).build())
-                .defenderResult(BattleResult.builder().didItWin(false).build())
-                .turns(turns)
-                .build();
-        BattleLog result = turnBasedBattleFlow.battle(props);
-        //assertTrue(turnBasedBattleFlow.battle(props).getTurns().equals(turns));
-        assertEquals(log.getAttackerResult().getDidItWin(), result.getAttackerResult().getDidItWin());
-        assertEquals(log.getDefenderResult().getDidItWin(), result.getDefenderResult().getDidItWin());
+    @ParameterizedTest
+    @ArgumentsSource(BattleLogProvider.class)
+    void testBattle(BattleLog expectedBattleLog, boolean enableRepost) {
+        // Mocks & Test Data preparation
+        when(damageCalculator.calcDamage(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(Damage.builder().damage(10)
+                        .chanceToRepost(enableRepost ? 1f : 0f)
+                        .NoDeadTroops(0)
+                        .NoDeadUnits(2)
+                        .build());
 
+        when(selector.getAttackerDefender(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(TurnParticipants.builder()
+                        .attacker(expectedBattleLog.getProperties().getAttackerArmy().getTroops().getFirst())
+                        .defender(expectedBattleLog.getProperties().getDefenderArmy().getTroops().getFirst())
+                        .build());
+
+        // Test
+        BattleLog result = turnBasedBattleFlow.battle(expectedBattleLog.getProperties());
+
+
+        // Asserts
+        assertEquals(expectedBattleLog.getProperties().getAttackerArmy().getId(),result.getProperties().getAttackerArmy().getId());
+        assertEquals(expectedBattleLog.getProperties().getAttackerArmy().getName(),result.getProperties().getAttackerArmy().getName());
+
+        assertEquals(expectedBattleLog.getProperties().getAttackerArmy().getId(),result.getProperties().getDefenderArmy().getId());
+        assertEquals(expectedBattleLog.getProperties().getAttackerArmy().getName(),result.getProperties().getDefenderArmy().getName());
+
+        assertEquals(expectedBattleLog.getAttackerResult().getDidItWin(),result.getAttackerResult().getDidItWin());
+        assertNotNull(result.getAttackerResult().getTransactions());
+        assertEquals(expectedBattleLog.getAttackerResult().getTransactions().size(), result.getAttackerResult().getTransactions().size());
+
+        assertEquals(expectedBattleLog.getDefenderResult().getDidItWin(),result.getDefenderResult().getDidItWin());
+        assertNotNull(result.getDefenderResult().getTransactions());
+        assertEquals(expectedBattleLog.getDefenderResult().getTransactions().size(), result.getDefenderResult().getTransactions().size());
+
+        assertNotNull(result.getTurns());
+        assertEquals(expectedBattleLog.getTurns().size(), result.getTurns().size());
+
+        for (int i = 0; i < result.getTurns().size(); i++) {
+            assertEquals(expectedBattleLog.getTurns().get(i).getResult(), result.getTurns().get(i).getResult());
+
+            assertEquals(expectedBattleLog.getTurns().get(i).getAttacker().getUnit(), result.getTurns().get(i).getAttacker().getUnit());
+            assertEquals(expectedBattleLog.getTurns().get(i).getAttacker().getQuantity(), result.getTurns().get(i).getAttacker().getQuantity());
+            assertEquals(expectedBattleLog.getTurns().get(i).getAttacker().getHealth(), result.getTurns().get(i).getAttacker().getHealth());
+
+            assertEquals(expectedBattleLog.getTurns().get(i).getDefender().getUnit(), result.getTurns().get(i).getDefender().getUnit());
+            assertEquals(expectedBattleLog.getTurns().get(i).getDefender().getQuantity(), result.getTurns().get(i).getDefender().getQuantity());
+            assertEquals(expectedBattleLog.getTurns().get(i).getDefender().getHealth(), result.getTurns().get(i).getDefender().getHealth());
+        }
+    }
+
+
+    public static class BattleLogProvider implements ArgumentsProvider{
+
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
+            return Stream.of(
+                    Arguments.of(BattleScenarios.successfulDefenseWithoutRepost(), false),
+                    Arguments.of(BattleScenarios.successfulDefenseWithoutRepost(), false),
+                    Arguments.of(BattleScenarios.successfulDefenseWithRepost(), true),
+                    Arguments.of(BattleScenarios.successfulDefenseWithRepost(), true)
+            );
+        }
     }
 }
