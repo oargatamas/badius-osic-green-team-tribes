@@ -15,26 +15,22 @@ public class BattleService {
     BattleFlow battleFlow;
 
     public BattleLog startBattle(Movement attacker) {
-        try {
-            if (attacker == null || attacker.getArmy() == null) {
-                throw new IllegalArgumentException("Attacker's army cannot be null");
-            }
-            Army attackerArmy = attacker.getArmy();
-            Army defenderArmy = attacker.getDestination().getStorage().getDefenderArmy();
-
-            if (defenderArmy == null) {
-                throw new IllegalArgumentException("Defender's army cannot be null");
-            }
-
-            BattleProperties battleProperties = battleFlow.prepare(attackerArmy, defenderArmy);
-
-            BattleLog battlelog = battleFlow.battle(battleProperties);
-
-            battleFlow.finalize(battlelog);
-
-            return battlelog;
-        } catch (Exception e) {
-            return null;
+        if (attacker == null || attacker.getArmy() == null) {
+            throw new IllegalArgumentException("Attacker's army cannot be null");
         }
+        Army attackerArmy = attacker.getArmy();
+        Army defenderArmy = attacker.getDestination().getStorage().getDefenderArmy();
+
+        if (defenderArmy == null) {
+            throw new IllegalArgumentException("Defender's army cannot be null");
+        }
+
+        BattleProperties battleProperties = battleFlow.prepare(attackerArmy, defenderArmy);
+
+        BattleLog battlelog = battleFlow.battle(battleProperties);
+
+        battleFlow.finalize(battlelog);
+
+        return battlelog;
     }
 }
