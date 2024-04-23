@@ -2,8 +2,9 @@ package com.greenfox.exam.badiusosicgreentribes.battle;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
+import com.greenfox.exam.badiusosicgreentribes.domain.battle.Unit;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitStats;
-import com.greenfox.exam.badiusosicgreentribes.model.battle.Damage;
+import com.greenfox.exam.badiusosicgreentribes.model.battle.*;
 import com.greenfox.exam.badiusosicgreentribes.service.TransactionService;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.TurnSelector;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.calculator.DamageCalculator;
@@ -43,27 +44,61 @@ class TurnBasedBattleFlowTest {
     private DamageCalculator damageCalculator;
     @InjectMocks
     private TurnBasedBattleFlow turnBasedBattleFlow;
+    UnitStats stats;
+    List<Troop> list;
+    Army attackerArmy;
+    Army defenderArmy;
+    BattleProperties props;
+    List<BattleTurn> turns;
     @BeforeEach
     public void initMocks(){
-        UnitStats stats = UnitStats.builder().speed(10).attack(3).defense(3).health(100).build();
-        List<Troop> list = new ArrayList<>(Arrays.asList(
-                Troop.builder().quantity(10).stats(stats).build()));
-        Army attackerArmy = Army.builder().name("attacker army").troops(list).build();
-        Army defenderArmy = Army.builder().name("defender army").troops(list).build();
+        stats = UnitStats.builder().speed(10).attack(13).defense(3).health(20).aggressivity(1F).build();
+        list = new ArrayList<>(Arrays.asList(
+                Troop.builder().quantity(4).unit(Unit.builder().name("test").build()).stats(stats).build()));
+        attackerArmy = Army.builder().name("attacker army").troops(list).build();
+        defenderArmy = Army.builder().name("defender army").troops(list).build();
+
+        props = BattleProperties.builder().attackerArmy(attackerArmy).defenderArmy(defenderArmy).build();
+        turns = new ArrayList<>(Arrays.asList(
+                BattleTurn.builder()
+                        .attacker(TroopInfo.builder().unit("test").quantity(4).health(20).build())
+                        .defender(TroopInfo.builder().unit("test").quantity(2).health(10).build())
+                        .result("test hit test for 10 damage. test was hit for 0").build(),
+                BattleTurn.builder()
+                        .attacker(TroopInfo.builder().unit("test").quantity(4).health(20).build())
+                        .defender(TroopInfo.builder().unit("test").quantity(0).health(0).build())
+                        .result("test hit test for 10 damage. test was hit for 0").build()
+                ));
 
         when(damageCalculator.calcDamage(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(Damage.builder().damage(5)
+                .thenReturn(Damage.builder().damage(10)
                         .chanceToRepost(1F)
                         .NoDeadTroops(0)
-                        .NoDeadUnits(0)
+                        .NoDeadUnits(2)
+                        .build());
+        when(selector.getAttackerDefender(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(TurnParticipants.builder()
+                        .attacker(attackerArmy.getTroops().getFirst())
+                        .defender(defenderArmy.getTroops().getFirst())
                         .build());
     }
 
     @Test
     void prepare() {
+
     }
 
     @Test
     void battle() {
+        BattleLog log = BattleLog.builder().properties(props)
+                .attackerResult(BattleResult.builder().didItWin(true).build())
+                .defenderResult(BattleResult.builder().didItWin(false).build())
+                .turns(turns)
+                .build();
+        BattleLog result = turnBasedBattleFlow.battle(props);
+        //assertTrue(turnBasedBattleFlow.battle(props).getTurns().equals(turns));
+        assertEquals(log.getAttackerResult().getDidItWin(), result.getAttackerResult().getDidItWin());
+        assertEquals(log.getDefenderResult().getDidItWin(), result.getDefenderResult().getDidItWin());
+
     }
 }

@@ -50,7 +50,7 @@ public class TurnBasedBattleFlow implements BattleFlow {
             Damage firstHit = damageCalculator.calcDamage(attacker, defender);
             Damage repost = Damage.builder().damage(0).build();
             applyDamage(firstHit, defender);
-            if (firstHit.getChanceToRepost() > 50 && defender.getQuantity() > 0) {
+            if (firstHit.getChanceToRepost() > 50F && defender.getQuantity() > 0) {
                 repost = damageCalculator.calcDamage(defender, attacker);
                 applyDamage(repost, attacker);
             }
@@ -74,10 +74,10 @@ public class TurnBasedBattleFlow implements BattleFlow {
                 .properties(BattleProperties.builder().attackerArmy(attackerArmy).defenderArmy(defenderArmy).build())
                 .turns(turns)
                 .attackerResult(BattleResult.builder()
-                        .didItWin(isArmyDepleted(attackerArmy))
+                        .didItWin(isArmyDepleted(defenderArmy))
                         .build())
                 .defenderResult(BattleResult.builder()
-                        .didItWin(isArmyDepleted(defenderArmy))
+                        .didItWin(isArmyDepleted(attackerArmy))
                         .build())
                 .build();
     }
