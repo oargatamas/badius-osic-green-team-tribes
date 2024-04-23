@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movement extends Transaction{
+public class Movement extends Transaction {
 
     @ManyToOne
     private Kingdom origin;
@@ -26,4 +26,5 @@ public class Movement extends Transaction{
     private Kingdom destination;
     @OneToOne
     private Army army;
+    private Boolean isRefundable;
 }
