@@ -31,4 +31,7 @@ public class Storage {
     @EqualsAndHashCode.Exclude
     private List<Building> buildings;
 
+    public void add(Army army) {
+        armies.add(army);
+    }
 }

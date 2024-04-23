@@ -26,5 +26,5 @@ public class Movement extends Transaction {
     private Kingdom destination;
     @OneToOne
     private Army army;
-    private Boolean isRefundable;
+    private boolean refundable;
 }
