@@ -2,10 +2,7 @@ package com.greenfox.exam.badiusosicgreentribes.domain.transaction;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +22,6 @@ public class Movement extends Transaction {
     private Kingdom destination;
     @OneToOne
     private Army army;
-    private Boolean refundable; //Todo set default value on the JPA side
+    @Column(columnDefinition = "boolean default true")
+    private Boolean refundable;
 }

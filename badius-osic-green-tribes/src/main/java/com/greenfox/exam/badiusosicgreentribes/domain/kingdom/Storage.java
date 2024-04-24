@@ -34,4 +34,8 @@ public class Storage {
     public void add(Army army) {
         armies.add(army);
     }
+
+    public void delete(Army army) {
+        armies.remove(army);
+    }
 }
