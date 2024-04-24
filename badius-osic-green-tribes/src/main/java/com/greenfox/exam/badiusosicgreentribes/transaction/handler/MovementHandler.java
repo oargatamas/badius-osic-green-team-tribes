@@ -6,12 +6,12 @@ import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionTyp
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
 import com.greenfox.exam.badiusosicgreentribes.repository.transaction.MovementRepository;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.BattleService;
-import com.greenfox.exam.badiusosicgreentribes.transaction.TransactionHandlerFactory;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.exception.TransactionRefundNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +19,6 @@ public class MovementHandler implements TransactionHandler<Movement> {
 
     MovementRepository movementRepository;
     BattleService battleService;
-    TransactionHandlerFactory handlerFactory;
     KingdomRepository kingdomRepository;
 
     @Override
@@ -27,10 +26,10 @@ public class MovementHandler implements TransactionHandler<Movement> {
         if (!transaction.getOrigin().getOwner().equals(transaction.getDestination().getOwner())) {
             battleService.startBattle(transaction);
         } else {
-            transaction.getOrigin().getStorage().delete(transaction.getArmy());
-            transaction.getDestination().getStorage().add(transaction.getArmy());
-            kingdomRepository.save(transaction.getOrigin());
-            kingdomRepository.save(transaction.getDestination());
+            transaction.getOrigin().getStorage().getArmies().remove(transaction.getArmy());
+            transaction.getDestination().getStorage().getArmies().add(transaction.getArmy());
+
+            kingdomRepository.saveAll(List.of(transaction.getOrigin(), transaction.getDestination()));
         }
     }
 
@@ -45,6 +44,7 @@ public class MovementHandler implements TransactionHandler<Movement> {
                     .destination(transaction.getOrigin())
                     .army(transaction.getArmy())
                     .build();
+
             movementRepository.save(refundMovement);
         } else {
             throw new TransactionRefundNotAllowedException(transaction);

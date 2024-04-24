@@ -13,6 +13,6 @@ public class TransactionRefundNotAllowedException extends RuntimeException {
     }
 
     private static String getMessage(Movement transaction){
-        return "Transaction %s cannot be refunded".formatted(transaction);
+        return "Transaction %s refund not allowed.".formatted(transaction);
     }
 }

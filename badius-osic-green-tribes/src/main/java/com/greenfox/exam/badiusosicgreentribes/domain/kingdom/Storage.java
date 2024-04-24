@@ -1,7 +1,10 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.*;
 
 import java.util.List;
@@ -31,11 +34,4 @@ public class Storage {
     @EqualsAndHashCode.Exclude
     private List<Building> buildings;
 
-    public void add(Army army) {
-        armies.add(army);
-    }
-
-    public void delete(Army army) {
-        armies.remove(army);
-    }
 }
