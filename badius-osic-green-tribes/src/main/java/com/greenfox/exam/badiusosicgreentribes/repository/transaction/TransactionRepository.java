@@ -11,4 +11,6 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     List<Transaction> findTransactionsByStateIs(TransactionState state);
+
+    List<Transaction> findTransactionsByIdInAndState(List<Long> ids, TransactionState state);
 }

@@ -1,113 +1,36 @@
 package com.greenfox.exam.badiusosicgreentribes.service;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitType;
-import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
-import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
-import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.MapArea;
-import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
-import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.ArmyAdapter;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.BuildingAdapter;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.KingdomAdapter;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.TroopAdapter;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.ArmyOperations;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.BuildingOperations;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.KingdomOperations;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.operations.TroopOperations;
-import lombok.AllArgsConstructor;
+import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Service
-public class KingdomService implements KingdomOperations, BuildingOperations, ArmyOperations, TroopOperations {
+@RequiredArgsConstructor
+public class KingdomService {
+    private KingdomRepository kingdomRepository;
 
-    KingdomAdapter kingdomAdapter;
-    BuildingAdapter buildingAdapter;
-    ArmyAdapter armyAdapter;
-    TroopAdapter troopAdapter;
-
-    @Override
-    public List<Troop> splitTroop(Troop troop1, List<Integer> distribution) {
-        return armyAdapter.splitTroop(troop1, distribution);
+    public KingdomService(KingdomRepository kingdomRepository) {
+        this.kingdomRepository = kingdomRepository;
+    }
+    public List<Kingdom> getKingdoms(){
+        return kingdomRepository.findAll();
     }
 
-    @Override
-    public Troop mergeTroop(Troop troop1, Troop troop2) {
-        return armyAdapter.mergeTroop(troop1, troop2);
+    public Kingdom findById(Long id) {
+        return kingdomRepository.findById(id).orElseThrow();
     }
-
-    @Override
-    public Army splitArmy(Army fromArmy, Army desiredArmy) {
-        return armyAdapter.splitArmy(fromArmy, desiredArmy);
+    public void save(Kingdom kingdom){
+        kingdomRepository.save(kingdom);
     }
-
-    @Override
-    public Army mergeArmy(Army targetArmy, List<Army> armiesToMerge) {
-        return armyAdapter.mergeArmy(targetArmy, armiesToMerge);
+    public void updateById(Long id, Kingdom kingdom){
+        if(!kingdomRepository.existsById(id)) throw new IllegalArgumentException("Kingdom does not exist");
+        kingdom.setId(id);
+        kingdomRepository.save(kingdom);
     }
-
-    @Override
-    public void removeArmy(Army armyToRemove) {
-        armyAdapter.removeArmy(armyToRemove);
-    }
-
-    @Override
-    public Transaction addBuilding(Kingdom kingdom, Building buildingToAdd) {
-        return buildingAdapter.addBuilding(kingdom, buildingToAdd);
-    }
-
-    @Override
-    public void destroyBuilding(Kingdom kingdom, Building buildingToDestroy) {
-        buildingAdapter.destroyBuilding(kingdom, buildingToDestroy);
-    }
-
-    @Override
-    public Transaction upgradeBuilding(Kingdom kingdom, Building buildingToUpgrade) {
-        return buildingAdapter.upgradeBuilding(kingdom, buildingToUpgrade);
-    }
-
-    @Override
-    public Kingdom getKingdom(Long id) {
-        return kingdomAdapter.getKingdom(id);
-    }
-
-    @Override
-    public List<Kingdom> listKingdoms(MapArea map) {
-        return kingdomAdapter.listKingdoms(map);
-    }
-
-    @Override
-    public Kingdom placeKingdom(User user, String name) {
-        return kingdomAdapter.placeKingdom(user, name);
-    }
-
-    @Override
-    public void removeKingdom(Long id) {
-        kingdomAdapter.removeKingdom(id);
-    }
-
-    @Override
-    public void updateTreasury(Kingdom kingdom, Production transaction) {
-        kingdomAdapter.updateTreasury(kingdom, transaction);
-    }
-
-    @Override
-    public Transaction attackKingdom(Army attacker, Kingdom target) {
-        return kingdomAdapter.attackKingdom(attacker, target);
-    }
-
-    @Override
-    public Transaction trainUnits(Kingdom kingdom, UnitType unit, Integer quantity) {
-        return troopAdapter.trainUnits(kingdom, unit, quantity);
-    }
-
-    @Override
-    public Transaction promoteTroop(Kingdom kingdom, Troop troopToUpgrade) {
-        return troopAdapter.promoteTroop(kingdom, troopToUpgrade);
+    public Boolean existsById(Long id){
+        return kingdomRepository.existsById(id);
     }
 }
