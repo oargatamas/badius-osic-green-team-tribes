@@ -1,4 +1,4 @@
-package com.greenfox.exam.badiusosicgreentribes.service.battle;
+package com.greenfox.exam.badiusosicgreentribes.service;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
@@ -6,12 +6,11 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Storage;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Movement;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleLog;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleProperties;
+import com.greenfox.exam.badiusosicgreentribes.service.battle.BattleFlow;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,10 +52,8 @@ class BattleServiceTest {
 
     @Test
     void startBattle_AttackerIsNull_ThrowsIllegalArgumentException() {
-        Movement attacker = null;
-
         assertThrows(IllegalArgumentException.class, () -> {
-            battleService.startBattle(attacker);
+            battleService.startBattle(null);
         });
 
     }

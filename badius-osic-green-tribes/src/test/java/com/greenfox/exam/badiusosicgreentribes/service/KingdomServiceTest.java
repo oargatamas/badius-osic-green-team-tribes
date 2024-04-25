@@ -9,7 +9,6 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Kingdom;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.MapArea;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Transaction;
-import com.greenfox.exam.badiusosicgreentribes.service.kingdom.KingdomService;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.ArmyAdapter;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.BuildingAdapter;
 import com.greenfox.exam.badiusosicgreentribes.service.kingdom.adapter.KingdomAdapter;
