@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -37,81 +38,122 @@ public class MovementHandlerTest {
     @InjectMocks
     MovementHandler movementHandler;
 
-    Movement movementWithSameOriginAndDestination;
-    Movement movementWithDifferentOriginAndDestination;
-    Movement movementWithSameOriginAndDestinationNotRefundable;
-    Kingdom origin;
-    Kingdom destination;
-    Army army1;
-    Army army2;
+    Movement movementWithBetweenAlliedKingdoms;
+    Movement movementWithTowardsEnemy;
+    Movement cancelledMovementResultMovement;
+
+    User owner1, owner2;
+    Kingdom origin, alliedDestination, enemyDestination;
+    Army movingArmy, defenderArmy;
 
     @BeforeEach
     void setupMocks() {
+        owner1 = User.builder().userId(12L).build();
+        owner2 = User.builder().userId(1L).build();
+
+        movingArmy = Army.builder()
+                .build();
+
+        defenderArmy = Army.builder()
+                .build();
 
         origin = Kingdom.builder()
-                .owner(new User())
-                .storage(new Storage(70, 220, army1, new ArrayList<>(), new ArrayList<>()))
-                .build();
-        destination = Kingdom.builder()
-                .owner(new User())
-                .storage(new Storage(90, 250, army2, new ArrayList<>(), new ArrayList<>()))
-                .build();
-        army1 = Army.builder()
-                .build();
-        army2 = Army.builder()
+                .owner(owner1)
+                .storage(Storage.builder()
+                        .food(70)
+                        .gold(220)
+                        .defenderArmy(Army.builder().build())
+                        .armies(new ArrayList<>(List.of(movingArmy)))
+                        .buildings(new ArrayList<>())
+                        .build())
                 .build();
 
-        movementWithDifferentOriginAndDestination = Movement.builder()
+        alliedDestination = Kingdom.builder()
+                .owner(owner1)
+                .storage(Storage.builder()
+                        .food(90)
+                        .gold(250)
+                        .defenderArmy(Army.builder().build())
+                        .armies(new ArrayList<>())
+                        .buildings(new ArrayList<>())
+                        .build())
+                .build();
+
+        enemyDestination = Kingdom.builder()
+                .owner(owner2)
+                .storage(Storage.builder()
+                        .food(90)
+                        .gold(250)
+                        .defenderArmy(defenderArmy)
+                        .armies(new ArrayList<>())
+                        .buildings(new ArrayList<>())
+                        .build())
+                .build();
+
+        movementWithBetweenAlliedKingdoms = Movement.builder()
                 .transactionType(TransactionType.MOVEMENT)
                 .state(TransactionState.SCHEDULED)
                 .startAt(LocalDateTime.now())
                 .duration(60000)
                 .origin(origin)
-                .destination(destination)
-                .army(army1)
-                .build();
-
-        movementWithSameOriginAndDestination = Movement.builder()
-                .transactionType(TransactionType.MOVEMENT)
-                .state(TransactionState.SCHEDULED)
-                .startAt(LocalDateTime.now())
-                .duration(60000)
-                .origin(origin)
-                .destination(origin)
-                .army(army1)
+                .destination(alliedDestination)
+                .army(movingArmy)
                 .refundable(true)
                 .build();
 
-        movementWithSameOriginAndDestinationNotRefundable = Movement.builder()
+        movementWithTowardsEnemy = Movement.builder()
+                .transactionType(TransactionType.MOVEMENT)
+                .state(TransactionState.SCHEDULED)
+                .startAt(LocalDateTime.now())
+                .duration(60000)
+                .origin(origin)
+                .destination(enemyDestination)
+                .army(movingArmy)
+                .refundable(true)
+                .build();
+
+        cancelledMovementResultMovement = Movement.builder()
                 .transactionType(TransactionType.MOVEMENT)
                 .state(TransactionState.SCHEDULED)
                 .startAt(LocalDateTime.now())
                 .duration(60000)
                 .origin(origin)
                 .destination(origin)
-                .army(army1)
+                .army(movingArmy)
                 .refundable(false)
                 .build();
     }
 
     @Test
-    void confirmMovementWithDifferentOriginAndDestination() {
+    void confirmMovementWithBetweenAlliedKingdoms() {
         //Act
-        movementHandler.confirm(movementWithDifferentOriginAndDestination);
-        //Assert
-        verify(battleService, times(1)).startBattle(movementWithDifferentOriginAndDestination);
-    }
-
-    @Test
-    void confirmMovementWithSameOriginAndDestination() {
-        //Act
-        movementHandler.confirm(movementWithSameOriginAndDestination);
+        movementHandler.confirm(movementWithBetweenAlliedKingdoms);
         //Assert
         verify(kingdomRepository, times(1)).saveAll(anyList());
+
+        //Todo assert on the kingdom entities to verify the army transfer
     }
 
     @Test
-    void refundMovementRefundAllowed() {
+    void confirmMovementWithTowardsEnemy() {
+        //Act
+        movementHandler.confirm(movementWithTowardsEnemy);
+        //Assert
+        verify(battleService, times(1)).startBattle(movementWithTowardsEnemy);
+    }
+
+    @Test
+    void confirmCancelledMovementResultMovement() {
+        //Act
+        movementHandler.confirm(cancelledMovementResultMovement);
+        //Assert
+        verify(kingdomRepository, times(1)).saveAll(anyList());
+
+        //Todo assert on the kingdom entities to verify the army transfer cancel
+    }
+
+    @Test
+    void refundMovementWithBetweenAlliedKingdoms() {
         //Arrange
         Movement expectedRefundMovement = Movement.builder()
                 .transactionType(TransactionType.MOVEMENT)
@@ -119,17 +161,35 @@ public class MovementHandlerTest {
                 .startAt(any(LocalDateTime.class))
                 .duration(60000)
                 .destination(origin)
-                .army(army1)
+                .army(movingArmy)
                 .build();
+
         //Act
-        movementHandler.refund(movementWithSameOriginAndDestination);
+        movementHandler.refund(movementWithBetweenAlliedKingdoms);
         //Assert
         verify(movementRepository, times(1)).save(expectedRefundMovement);
     }
 
     @Test
-    void refundMovementRefundNotAllowed() {
-        //Act and Assert
-        assertThrows(TransactionRefundNotAllowedException.class, () -> movementHandler.refund(movementWithSameOriginAndDestinationNotRefundable));
+    void refundMovementWithTowardsEnemy() {
+        //Arrange
+        Movement expectedRefundMovement = Movement.builder()
+                .transactionType(TransactionType.MOVEMENT)
+                .state(TransactionState.SCHEDULED)
+                .startAt(any(LocalDateTime.class))
+                .duration(60000)
+                .destination(origin)
+                .army(movingArmy)
+                .build();
+        //Act
+        movementHandler.refund(movementWithTowardsEnemy);
+        //Assert
+        verify(movementRepository, times(1)).save(expectedRefundMovement);
+    }
+
+    @Test
+    void refundCancelledMovementResultMovement() {
+        //Act
+        assertThrows(TransactionRefundNotAllowedException.class, () -> movementHandler.refund(cancelledMovementResultMovement));
     }
 }
