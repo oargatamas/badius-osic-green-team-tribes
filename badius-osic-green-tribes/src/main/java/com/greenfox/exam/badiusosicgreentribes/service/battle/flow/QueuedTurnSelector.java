@@ -2,16 +2,13 @@ package com.greenfox.exam.badiusosicgreentribes.service.battle.flow;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
-import com.greenfox.exam.badiusosicgreentribes.model.battle.BattleTurn;
-import com.greenfox.exam.badiusosicgreentribes.model.battle.Damage;
 import com.greenfox.exam.badiusosicgreentribes.model.battle.TurnParticipants;
 import com.greenfox.exam.badiusosicgreentribes.service.battle.TurnSelector;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class QueuedTurnSelector implements TurnSelector {
+
     @Override
     public Troop getTroop(Army army) {
         return new Troop();
@@ -20,6 +17,10 @@ public class QueuedTurnSelector implements TurnSelector {
 
     @Override
     public TurnParticipants getAttackerDefender(Army attacker, Army defender) {
+        //Todo refactor to remove random elements from the logic
+        // By default the attacker army troop hits first.
+        // If the defender speed is higher than the attacker, then switch the participants.
+
         Random random = new Random();
         Troop troop1 = attacker.getTroops().stream().filter(t -> t.getQuantity() > 0).findFirst().orElseThrow();
         Troop troop2 = defender.getTroops().stream().filter(t -> t.getQuantity() > 0).findFirst().orElseThrow();
