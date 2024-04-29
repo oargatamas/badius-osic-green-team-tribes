@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,5 +74,19 @@ public class TransactionService {
                 log.error(MessageFormat.format("Transaction cancellation failed on {0}", transaction.getId()), e);
             }
         });
+    }
+
+    public void cancelTransaction(Long trxId) {
+        Transaction scheduledTransaction = repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED);
+
+        try {
+            TransactionHandler handler = handlerFactory.getHandler(scheduledTransaction.getTransactionType());
+            handler.refund(scheduledTransaction);
+
+            scheduledTransaction.setState(TransactionState.CANCELLED);
+            repository.save(scheduledTransaction);
+        } catch (Exception e) {
+            log.error(MessageFormat.format("Transaction cancellation failed on {0}", scheduledTransaction.getId()), e);
+        }
     }
 }
