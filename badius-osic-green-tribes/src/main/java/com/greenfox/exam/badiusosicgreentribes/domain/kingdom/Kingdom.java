@@ -1,6 +1,7 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
+import com.greenfox.exam.badiusosicgreentribes.domain.battle.Unit;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitType;
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
 import jakarta.persistence.*;
@@ -50,6 +51,8 @@ public class Kingdom {
     public void addTroop(UnitType unitType, int quantity) {
         for (int i = 0; i < quantity; i++) {
             Troop newTroop = new Troop();
+            Unit newUnit = new Unit();
+            newTroop.setUnit(newUnit);
             newTroop.getUnit().setType(unitType);
             storage.getDefenderArmy().getTroops().add(newTroop);
         }
