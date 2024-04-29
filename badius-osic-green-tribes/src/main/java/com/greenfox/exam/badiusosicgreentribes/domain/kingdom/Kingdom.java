@@ -1,5 +1,7 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
+import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
+import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitType;
 import com.greenfox.exam.badiusosicgreentribes.domain.common.User;
 import jakarta.persistence.*;
 import jakarta.websocket.ClientEndpoint;
@@ -9,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table (name = "Kingdoms")
+@Table(name = "Kingdoms")
 @Builder
 @Data
 @NoArgsConstructor
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Kingdom {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -36,4 +38,20 @@ public class Kingdom {
 
     @Embedded
     private Storage storage;
+
+    public void addBuilding(BuildingType buildingType, int quantity) {
+        for (int i = 0; i < quantity; i++) {
+            Building newBuilding = new Building();
+            newBuilding.setType(buildingType);
+            storage.getBuildings().add(newBuilding);
+        }
+    }
+
+    public void addTroop(UnitType unitType, int quantity) {
+        for (int i = 0; i < quantity; i++) {
+            Troop newTroop = new Troop();
+            newTroop.getUnit().setType(unitType);
+            storage.getDefenderArmy().getTroops().add(newTroop);
+        }
+    }
 }
