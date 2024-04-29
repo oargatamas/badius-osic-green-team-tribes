@@ -11,6 +11,8 @@ import com.greenfox.exam.badiusosicgreentribes.repository.transaction.Production
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class ProductionHandler implements TransactionHandler<Production> {
@@ -57,6 +59,16 @@ public class ProductionHandler implements TransactionHandler<Production> {
                 default:
                     throw new IllegalStateException("Unexpected value: " + transaction.getProductionType());
             }
+        }
+
+        if (transaction.isRecurring()){
+            Production clonedTransaction = new Production();
+            clonedTransaction.setProductionType(transaction.getProductionType());
+            clonedTransaction.setQuantity(transaction.getQuantity());
+            clonedTransaction.setTargetKingdom(transaction.getTargetKingdom());
+            clonedTransaction.setRecurring(transaction.isRecurring());
+            clonedTransaction.setStartAt(LocalDateTime.now());
+            clonedTransaction.setState(TransactionState.SCHEDULED);
         }
     }
 
