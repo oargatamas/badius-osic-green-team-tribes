@@ -74,6 +74,6 @@ public class ProductionHandler implements TransactionHandler<Production> {
 
     @Override
     public void refund(Production transaction) {
-        // Todo implement method
+        throw new UnsupportedOperationException("Refund is not possible in this transaction.");
     }
 }
