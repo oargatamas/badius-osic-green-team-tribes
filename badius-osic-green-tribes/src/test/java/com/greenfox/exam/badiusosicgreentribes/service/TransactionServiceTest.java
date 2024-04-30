@@ -187,6 +187,33 @@ class TransactionServiceTest {
         verify(repository, times(2)).save(any());
     }
 
+    @Test
+    void cancelTransaction_Scheduled() {
+        Long trxId = 1L;
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledUpgrade);
+
+        transactionService.cancelTransaction(trxId);
+
+        assertEquals(TransactionState.CANCELLED, scheduledUpgrade.getState());
+        verify(handlerFactory, times(1)).getHandler(TransactionType.UPGRADE);
+        verify(upgradeHandler, times(1)).refund(scheduledUpgrade);
+        verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    void cancelTransaction_FailedCancellation() {
+        Long trxId = 1L;
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledMovement);
+        doThrow(RuntimeException.class).when(movementHandler).refund(any());
+
+        transactionService.cancelTransaction(trxId);
+
+        assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
+        verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
+        verify(movementHandler, times(1)).refund(scheduledMovement);
+        verify(repository, times(0)).save(any());
+    }
+
     private Movement getScheduledMovement() {
         return Movement.builder()
                 .transactionType(TransactionType.MOVEMENT)
