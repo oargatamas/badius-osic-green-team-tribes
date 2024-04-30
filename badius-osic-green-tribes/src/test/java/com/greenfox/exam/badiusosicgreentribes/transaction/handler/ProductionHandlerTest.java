@@ -10,18 +10,30 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Storage;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.ProductionUnitType;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionState;
+import com.greenfox.exam.badiusosicgreentribes.repository.transaction.ProductionRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 class ProductionHandlerTest {
 
     @Test
-    void confirmCompletedTransaction() {
+    void confirm_CompletedTransaction() {
         Kingdom kingdom = new Kingdom();
         Storage storage = new Storage();
         kingdom.setStorage(storage);
@@ -41,7 +53,7 @@ class ProductionHandlerTest {
     }
 
     @Test
-    void NotCompletedTransaction() {
+    void confirm_NotCompletedTransaction() {
         Kingdom kingdom = new Kingdom();
         Storage storage = new Storage();
         kingdom.setStorage(storage);
@@ -61,7 +73,7 @@ class ProductionHandlerTest {
     }
 
     @Test
-    void confirmCompletedTransactionFarm() {
+    void confirm_CompletedTransaction_Farm() {
         Kingdom kingdom = new Kingdom();
         Storage storage = new Storage();
         storage.setBuildings(new ArrayList<>());
@@ -80,7 +92,7 @@ class ProductionHandlerTest {
     }
 
     @Test
-    void confirmCompletedTransactionKnight() {
+    void confirm_CompletedTransaction_Knight() {
         Kingdom kingdom = new Kingdom();
         Storage storage = new Storage();
         kingdom.setStorage(storage);
@@ -111,7 +123,19 @@ class ProductionHandlerTest {
     }
 
     @Test
-    void refundUnsupportedOperation() {
+    void confirm_RecurringTransaction_ClonesTransaction() {
+        Production transaction = new Production();
+        transaction.setRecurring(true);
+        ProductionHandler handler = new ProductionHandler();
+
+        Production clonedTransaction = handler.cloneRecurringTransaction(transaction);
+
+        assertEquals(TransactionState.SCHEDULED, clonedTransaction.getState());
+    }
+
+
+    @Test
+    void refund_UnsupportedOperation() {
         Production transaction = new Production();
 
         ProductionHandler handler = new ProductionHandler();
