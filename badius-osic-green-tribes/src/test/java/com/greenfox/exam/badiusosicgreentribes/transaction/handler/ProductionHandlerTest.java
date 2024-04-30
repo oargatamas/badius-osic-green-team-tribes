@@ -10,24 +10,13 @@ import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Storage;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.ProductionUnitType;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionState;
-import com.greenfox.exam.badiusosicgreentribes.repository.transaction.ProductionRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+
 
 
 class ProductionHandlerTest {

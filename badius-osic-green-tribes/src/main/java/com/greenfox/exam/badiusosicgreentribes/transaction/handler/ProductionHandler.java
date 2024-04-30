@@ -1,15 +1,10 @@
 package com.greenfox.exam.badiusosicgreentribes.transaction.handler;
 
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Troop;
-import com.greenfox.exam.badiusosicgreentribes.domain.battle.Unit;
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.UnitType;
-import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.Building;
 import com.greenfox.exam.badiusosicgreentribes.domain.kingdom.BuildingType;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.Production;
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionState;
-import com.greenfox.exam.badiusosicgreentribes.repository.transaction.ProductionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
