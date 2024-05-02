@@ -18,23 +18,25 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-
 class ProductionHandlerTest {
+
+    ProductionHandler handler = new ProductionHandler();
 
     @Test
     void confirm_CompletedTransaction() {
         Kingdom kingdom = new Kingdom();
-        Storage storage = new Storage();
+        Storage storage = Storage.builder()
+                .gold(100)
+                .food(50)
+                .build();
         kingdom.setStorage(storage);
-        storage.setGold(100);
-        storage.setFood(50);
-        Production transaction = new Production();
-        transaction.setProductionType(ProductionUnitType.GOLD);
-        transaction.setQuantity(10);
-        transaction.setTargetKingdom(kingdom);
-        transaction.setState(TransactionState.COMPLETED);
+        Production transaction = Production.builder()
+                .productionType(ProductionUnitType.GOLD)
+                .quantity(10)
+                .targetKingdom(kingdom)
+                .state(TransactionState.COMPLETED)
+                .build();
 
-        ProductionHandler handler = new ProductionHandler();
         handler.confirm(transaction);
 
         assertEquals(110, storage.getGold());
@@ -44,17 +46,18 @@ class ProductionHandlerTest {
     @Test
     void confirm_NotCompletedTransaction() {
         Kingdom kingdom = new Kingdom();
-        Storage storage = new Storage();
+        Storage storage = Storage.builder()
+                .gold(100)
+                .food(50)
+                .build();
         kingdom.setStorage(storage);
-        storage.setGold(100);
-        storage.setFood(50);
-        Production transaction = new Production();
-        transaction.setProductionType(ProductionUnitType.GOLD);
-        transaction.setQuantity(10);
-        transaction.setTargetKingdom(kingdom);
-        transaction.setState(TransactionState.CANCELLED);
+        Production transaction = Production.builder()
+                .productionType(ProductionUnitType.GOLD)
+                .quantity(10)
+                .targetKingdom(kingdom)
+                .state(TransactionState.CANCELLED)
+                .build();
 
-        ProductionHandler handler = new ProductionHandler();
         handler.confirm(transaction);
 
         assertEquals(100, storage.getGold());
@@ -67,13 +70,13 @@ class ProductionHandlerTest {
         Storage storage = new Storage();
         storage.setBuildings(new ArrayList<>());
         kingdom.setStorage(storage);
-        Production transaction = new Production();
-        transaction.setProductionType(ProductionUnitType.FARM);
-        transaction.setQuantity(1);
-        transaction.setTargetKingdom(kingdom);
-        transaction.setState(TransactionState.COMPLETED);
+        Production transaction = Production.builder()
+                .productionType(ProductionUnitType.FARM)
+                .quantity(1)
+                .targetKingdom(kingdom)
+                .state(TransactionState.COMPLETED)
+                .build();
 
-        ProductionHandler handler = new ProductionHandler();
         handler.confirm(transaction);
 
         assertTrue(kingdom.getStorage().getBuildings().stream()
@@ -98,13 +101,13 @@ class ProductionHandlerTest {
 
         storage.setDefenderArmy(defenderArmy);
 
-        Production transaction = new Production();
-        transaction.setProductionType(ProductionUnitType.KNIGHT);
-        transaction.setQuantity(1);
-        transaction.setTargetKingdom(kingdom);
-        transaction.setState(TransactionState.COMPLETED);
+        Production transaction = Production.builder()
+                .productionType(ProductionUnitType.KNIGHT)
+                .quantity(1)
+                .targetKingdom(kingdom)
+                .state(TransactionState.COMPLETED)
+                .build();
 
-        ProductionHandler handler = new ProductionHandler();
         handler.confirm(transaction);
 
         assertTrue(kingdom.getStorage().getDefenderArmy().getTroops().stream()
@@ -115,7 +118,6 @@ class ProductionHandlerTest {
     void confirm_RecurringTransaction_ClonesTransaction() {
         Production transaction = new Production();
         transaction.setRecurring(true);
-        ProductionHandler handler = new ProductionHandler();
 
         Production clonedTransaction = handler.cloneRecurringTransaction(transaction);
 
@@ -126,8 +128,6 @@ class ProductionHandlerTest {
     @Test
     void refund_UnsupportedOperation() {
         Production transaction = new Production();
-
-        ProductionHandler handler = new ProductionHandler();
 
         assertThrows(UnsupportedOperationException.class, () -> handler.refund(transaction));
     }
