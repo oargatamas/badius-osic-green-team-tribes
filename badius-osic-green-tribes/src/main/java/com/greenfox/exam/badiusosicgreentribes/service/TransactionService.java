@@ -65,11 +65,7 @@ public class TransactionService {
 
         scheduledTransactions.forEach(transaction -> {
             try {
-                TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
-                handler.refund(transaction);
-
-                transaction.setState(TransactionState.CANCELLED);
-                repository.save(transaction);
+                cancelTransaction(transaction);
             } catch (Exception e) {
                 log.error(MessageFormat.format("Transaction cancellation failed on {0}", transaction.getId()), e);
             }
@@ -78,15 +74,14 @@ public class TransactionService {
 
     public void cancelTransaction(Long trxId) {
         Transaction scheduledTransaction = repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED);
+        cancelTransaction(scheduledTransaction);
+    }
 
-        try {
-            TransactionHandler handler = handlerFactory.getHandler(scheduledTransaction.getTransactionType());
-            handler.refund(scheduledTransaction);
+    private void cancelTransaction(Transaction transaction) {
+        TransactionHandler handler = handlerFactory.getHandler(transaction.getTransactionType());
+        handler.refund(transaction);
 
-            scheduledTransaction.setState(TransactionState.CANCELLED);
-            repository.save(scheduledTransaction);
-        } catch (Exception e) {
-            log.error(MessageFormat.format("Transaction cancellation failed on {0}", scheduledTransaction.getId()), e);
-        }
+        transaction.setState(TransactionState.CANCELLED);
+        repository.save(transaction);
     }
 }
