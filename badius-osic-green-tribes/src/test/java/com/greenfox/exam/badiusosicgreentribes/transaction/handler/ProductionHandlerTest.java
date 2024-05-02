@@ -121,7 +121,12 @@ class ProductionHandlerTest {
 
         Production clonedTransaction = handler.cloneRecurringTransaction(transaction);
 
-        assertEquals(TransactionState.SCHEDULED, clonedTransaction.getState());
+        assertEquals(transaction.getProductionType(), clonedTransaction.getProductionType());
+        assertEquals(transaction.getQuantity(), clonedTransaction.getQuantity());
+        assertEquals(transaction.getTargetKingdom(), clonedTransaction.getTargetKingdom());
+        assertEquals(transaction.isRecurring(), clonedTransaction.isRecurring());
+        assertNotEquals(transaction.getState(), clonedTransaction.getState());
+        assertNotEquals(transaction.getStartAt(), clonedTransaction.getStartAt());
     }
 
 
