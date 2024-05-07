@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -207,6 +208,20 @@ class TransactionServiceTest {
         doThrow(RuntimeException.class).when(movementHandler).refund(any());
 
         transactionService.cancelTransaction(trxId);
+
+        assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
+        verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
+        verify(movementHandler, times(1)).refund(scheduledMovement);
+        verify(repository, times(0)).save(any());
+    }
+
+    @Test
+    void cancelTransaction_FailedRefund() {
+        Long trxId = 1L;
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledMovement);
+        doThrow(RuntimeException.class).when(movementHandler).refund(any());
+
+        assertThrows(RuntimeException.class, () -> transactionService.cancelTransaction(trxId));
 
         assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
         verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
