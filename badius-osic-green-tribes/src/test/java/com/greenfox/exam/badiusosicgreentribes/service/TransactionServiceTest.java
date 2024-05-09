@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -191,7 +192,7 @@ class TransactionServiceTest {
     @Test
     void cancelTransaction_Scheduled() {
         Long trxId = 1L;
-        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledUpgrade);
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(Optional.of(scheduledUpgrade));
 
         transactionService.cancelTransaction(trxId);
 
@@ -202,12 +203,12 @@ class TransactionServiceTest {
     }
 
     @Test
-    void cancelTransaction_FailedCancellation() {
+    void cancelTransaction_FailedRefund() {
         Long trxId = 1L;
-        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledMovement);
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(Optional.of(scheduledMovement));
         doThrow(RuntimeException.class).when(movementHandler).refund(any());
 
-        transactionService.cancelTransaction(trxId);
+        assertThrows(RuntimeException.class, () -> transactionService.cancelTransaction(trxId));
 
         assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
         verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
@@ -216,16 +217,14 @@ class TransactionServiceTest {
     }
 
     @Test
-    void cancelTransaction_FailedRefund() {
+    void cancelTransaction_TransactionNotFound() {
         Long trxId = 1L;
-        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(scheduledMovement);
-        doThrow(RuntimeException.class).when(movementHandler).refund(any());
+        when(repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> transactionService.cancelTransaction(trxId));
 
-        assertEquals(TransactionState.SCHEDULED, scheduledMovement.getState());
-        verify(handlerFactory, times(1)).getHandler(TransactionType.MOVEMENT);
-        verify(movementHandler, times(1)).refund(scheduledMovement);
+        verify(handlerFactory, times(0)).getHandler(TransactionType.MOVEMENT);
+        verify(movementHandler, times(0)).refund(scheduledMovement);
         verify(repository, times(0)).save(any());
     }
 

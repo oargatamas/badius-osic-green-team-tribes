@@ -73,7 +73,8 @@ public class TransactionService {
     }
 
     public void cancelTransaction(Long trxId) {
-        Transaction scheduledTransaction = repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED);
+        Transaction scheduledTransaction = repository.findTransactionByIdAndState(trxId, TransactionState.SCHEDULED)
+                .orElseThrow();
         cancelTransaction(scheduledTransaction);
     }
 
