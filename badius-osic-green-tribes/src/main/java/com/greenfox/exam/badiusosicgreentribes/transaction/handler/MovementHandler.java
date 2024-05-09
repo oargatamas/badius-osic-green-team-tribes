@@ -5,7 +5,7 @@ import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionSta
 import com.greenfox.exam.badiusosicgreentribes.domain.transaction.TransactionType;
 import com.greenfox.exam.badiusosicgreentribes.repository.kingdom.KingdomRepository;
 import com.greenfox.exam.badiusosicgreentribes.repository.transaction.MovementRepository;
-import com.greenfox.exam.badiusosicgreentribes.service.battle.BattleService;
+import com.greenfox.exam.badiusosicgreentribes.service.BattleService;
 import com.greenfox.exam.badiusosicgreentribes.transaction.handler.exception.TransactionRefundNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
