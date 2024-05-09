@@ -1,7 +1,10 @@
 package com.greenfox.exam.badiusosicgreentribes.domain.kingdom;
 
 import com.greenfox.exam.badiusosicgreentribes.domain.battle.Army;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.*;
 
 import java.util.List;
